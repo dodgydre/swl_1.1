@@ -215,22 +215,24 @@ get_header();
           onClear: function() {
             $grid.isotope({ filter: "*" });
           },
+          onItemAdd: function() {
+              this.close();
+          }
         });
         var $filterSearch = $filter[0].selectize;
 
         var $filter_mobile = jQuery("#filter-search_mobile").selectize({
-              options: [
-        <?php
+            options: [
+                <?php
+                    foreach ($filters as $filter) {
+                        if (!empty($filter)) {
+                            echo $filter.",\r\n";
+                        }
+                    }
 
-                                foreach ($filters as $filter) {
-                                    if (!empty($filter)) {
-                                        echo $filter.",\r\n";
-                                    }
-                                }
-
-                        ?>
-              ],
-              optgroups: [
+                ?>
+            ],
+            optgroups: [
                 { value: 'type', label: 'Type', $order: 1 },
                 { value: 'material', label: 'Material', $order: 2 },
                 { value: 'tag', label: 'Material', $order: 3 },
@@ -238,42 +240,44 @@ get_header();
                 { value: 'city', label: 'City', $order: 5 },
                 { value: 'country', label: 'Country', $order: 6 },
                 { value: 'year', label: 'Year', $order: 7 },
-              ],
-              optgroupField: 'class',
-              lockOptgroupOrder: true,
-              labelField: 'name',
-              searchField: ['name'],
-              sortField: 'name',
-              selectOnTab: true,
-              render: {
+            ],
+            optgroupField: 'class',
+            lockOptgroupOrder: true,
+            labelField: 'name',
+            searchField: ['name'],
+            sortField: 'name',
+            selectOnTab: true,
+            render: {
                 optgroup_header: function(data, escape) {
-                  return '<div class="optgroup-header" style="display: none;">' + escape(data.label) + '</div>';
+                    return '<div class="optgroup-header" style="display: none;">' + escape(data.label) + '</div>';
                 },
-              },
+            },
 
-              create: false,
-              onChange: function(value) {
+            create: false,
+            onChange: function(value) {
                 if(value == '') {
-                  var filterList = "*";
-                }
-                else {
-                  var filters = value.split(',');
-                  var filterList = '';
-                  for( var i = 0; i < filters.length; i++ ) {
-                    filterList += '.' + filters[i];
-                  }
+                    var filterList = "*";
+                } else {
+                    var filters = value.split(',');
+                    var filterList = '';
+                    for( var i = 0; i < filters.length; i++ ) {
+                        filterList += '.' + filters[i];
+                    }
                 }
                 $grid.isotope({ filter: filterList });
-              },
-              onClear: function() {
+            },
+            onClear: function() {
                 $grid.isotope({ filter: "*" });
-              },
+            },
+                onItemAdd: function() {
+                    this.close();
+                }
             });
             var $filterSearch_mobile = $filter_mobile[0].selectize;
 
     /* ISOTOPE GRID */
-    var $grid = jQuery('.projthumb-wrap').imagesLoaded( function() {
-    jQuery('.projthumb-wrap').isotope({
+    var $grid = jQuery('.projthumb-wrap').imagesLoaded(function() {
+        jQuery('.projthumb-wrap').isotope({
           	itemSelector: '.projthumb',
           layoutMode: 'fitRows',
           transitionDuration: 0,

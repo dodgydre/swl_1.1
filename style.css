@@ -290,6 +290,8 @@ body {
   /* Fallback for when there is no custom background color defined. */ }
 
 @media (min-width: 769px) {
+  body.post-type-archive-project {
+    overflow: auto; }
   body {
     overflow: hidden; } }
 

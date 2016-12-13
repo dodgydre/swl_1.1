@@ -13,9 +13,12 @@ body {
 }
 
 @media (min-width: 769px) {
-    body {
-        overflow: hidden;
+    body.post-type-archive-project {
+        overflow: auto;
     }
+	body {
+		overflow: hidden;
+	}
 }
 
 blockquote, q {

@@ -1,0 +1,11 @@
+{
+    "name": "swl_1",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "laravel-elixir": "^5.0.0"
+    },
+    "devDependencies": {
+        "gulp": "^3.9.1"
+    }
+}

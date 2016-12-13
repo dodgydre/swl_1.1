@@ -1,0 +1,61 @@
+/* /////////////////////////////////////////////////////////////////////
+//  0X - Slideshow Navigation
+/////////////////////////////////////////////////////////////////////*/
+
+.arrw {
+  display: block;
+  opacity: 0;
+  position: absolute;
+  z-index: 10;
+  background-image: url(images/t.png);
+}
+
+.arrw.down {
+  display: none;
+}
+
+.arrw.left {
+  background: red;
+  width: 150px;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.arrw.right {
+  background: red;
+  width: 150px;
+  height: 100%;
+  right: 0;
+  top: 0;
+}
+
+.arrw.up {
+  width: 100%;
+  height: 120px;
+  left: 0;
+  top: 0;
+}
+
+.arrw.down {
+  width: 100%;
+  height: 120px;
+  left: 0;
+  bottom: 0;
+}
+
+a.arrw.left:hover {
+  cursor: url('images/arrw_l.png') 0 20, pointer;
+}
+
+a.arrw.right:hover {
+  cursor: url('images/arrw_r.png') 17 20, pointer;
+}
+
+a.arrw.up:hover {
+  cursor: url('images/arrw_u.png') 20 0, pointer;
+}
+
+a.arrw.down:hover {
+  cursor: url('images/arrw_d.png') 20 0, pointer;
+}

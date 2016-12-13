@@ -1,0 +1,155 @@
+/*--------------------------------------------------------------
+## SWL Specific Items
+--------------------------------------------------------------*/
+
+#header {
+  background-color: #fff;
+  background-image: url("images/header_bg.gif");
+  background-repeat: repeat-x;
+  background-position: center top;
+  width: 100%;
+  height: 75px;
+  /* header height */
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.admin-bar #header {
+  top: 32px;
+}
+
+#site, .content-area {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin-top: 75px;
+}
+
+.admin-bar #site, .admin-bar .content-area {
+  margin-top: 107px;
+}
+
+#proj_img {
+  width: 1024px;
+  height: 500px;
+  margin-top: 75px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.admin-bar #proj_img {
+  margin-top: 107px;
+}
+
+#proj_list {
+  width: 100%;
+  margin-top: 75px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.admin-bar #proj_list {
+  margin-top: 107px;
+}
+
+#proj_img .slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+  z-index: 4;
+}
+
+#proj_img .slide p {
+  margin: 20px;
+  font-size: 39px;
+  line-height: 50px;
+  width: 840px;
+}
+
+#proj_img .proj.active .slide:first-child {
+  display: block;
+}
+
+.proj {
+  width: 100%;
+  height: 100%;
+}
+
+img.slide {
+  max-width: none;
+}
+
+.header-contents {
+  width: 90%;
+  height: 75px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+.swl-logo {
+  top: 15px;
+  left: 0;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+
+  a {
+    text-decoration: none;
+    color: #000;
+    font-family: 'DINCondensedA', sans-serif;
+
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: 3.1px;
+      margin-bottom: 0;
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    p {
+      margin-bottom: 0;
+      margin-top: 0;
+      letter-spacing: 1.3px;
+    }
+
+    a:hover, a:active {
+      color: #666;
+    }
+
+    a:visited {
+      color: #000;
+    }
+  }
+}
+
+
+/* Shrink Header for Smaller Screens in Landscape Mode */
+
+@media screen and (max-height: 500px) {
+  #header, .header_contents {
+    height: 30px;
+  }
+  .swl-logo {
+    top: 2px;
+
+    p {
+      display: none;
+    }
+    h3 {
+      font-size: 14px;
+      letter-spacing: 1.5px
+    }
+  }
+  #proj_img {
+    margin-top: 30px;
+  }
+}

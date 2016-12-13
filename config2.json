@@ -1,0 +1,4 @@
+"linter-phpcs":
+    executablePath: "/Users/andreas/.composer/vendor/bin/phpcs"
+    codeStandardOrConfigFile: "WordPress"
+    tabWidth: 4

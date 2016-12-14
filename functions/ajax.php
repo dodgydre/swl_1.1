@@ -107,7 +107,7 @@ function ajax_get_project_imgs()
         }
     }
 
-    $imgs[$i] = '<span class="date">'.$proj_date.'</span><span class="caption">'.$the_project_title.'</span><span class="description">'.$the_project_description.'</span>';
+    $imgs[$i] = '<span class="date inactive">'.$proj_date.'</span><span class="caption inactive">'.$the_project_title.'</span><span class="description inactive">'.$the_project_description.'</span>';
 
     echo json_encode($imgs);
 

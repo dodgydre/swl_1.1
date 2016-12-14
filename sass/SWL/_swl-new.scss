@@ -1,23 +1,18 @@
 /* /////////////////////////////////////////////////////////////////////
 //  0X - General Site Layout
 /////////////////////////////////////////////////////////////////////*/
-
 #site {
   height: 100%;
   width: 100%;
   overflow: hidden;
 }
-
 /* /////////////////////////////////////////////////////////////////////
 //  0X - Header and Menu Bar and Footer
 /////////////////////////////////////////////////////////////////////*/
-
 @import 'swl-menu';
-
 /* /////////////////////////////////////////////////////////////////////
 //  0X - Content
 /////////////////////////////////////////////////////////////////////*/
-
 .content {
   margin-top: 45px;
   //height: calc(100% - 75px);
@@ -27,8 +22,8 @@
   position: absolute;
 }
 
-#proj_img,
-#image_container {
+#image_container,
+#proj_img {
   //background-image: url("../images/project_imgs/1.jpg");
   /*background-position: center center;
   background-size: cover;
@@ -37,6 +32,7 @@
   width: 100%;
   height: 100%;
 }
+
 #proj_img .slide {
   position: absolute;
   left: 0;
@@ -54,7 +50,6 @@
 #proj_img .proj.active .slide:first-child {
   display: block;
 }
-
 @media (min-width: 769px) {
   .content {
     margin-top: 105px;
@@ -67,12 +62,17 @@
   }
 }
 
-/* Smaller Screens */
 .project_image {
   max-width: 100%;
   height: auto;
 }
 
+.single_project_image {
+  height: auto;
+  max-width: 100%;
+}
+// Hide the caption, etc. in large screens.
+// these are shown in single footer
 .caption {
   display: none;
 }
@@ -89,28 +89,30 @@
   display: none;
 }
 
+// Smaller Screens
 @media (max-width: 768px) {
   .caption {
     display: inline-block;
-    margin: 20px;
+    float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: medium;
     font-weight: 400;
-    text-transform: capitalize;
-    padding: 0px 1px 0 10px;
-    float: left;
+    margin: 20px;
     max-width: calc(100% - 150px);
     overflow: hidden;
-    white-space: nowrap;
+    padding: 0 1px 0 10px;
     text-overflow: ellipsis;
+    text-transform: capitalize;
+    white-space: nowrap;
   }
+
   .description {
     display: block;
     max-height: 0;
     height: 0;
     overflow-y: auto;
     margin: 20px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     padding-left: 10px;
     padding-right: 10px;
     border-bottom: 1px solid #efefef;
@@ -120,14 +122,18 @@
     clear: left;
     transition: height 1s, max-height 1s, padding-bottom 0.1s;
   }
+
   .description.active {
     max-height: 500px;
     height: auto;
     padding-bottom: 20px;
     transition: height 1s, max-height 1s, padding-bottom 0.1s;
-    //margin: 20px;
-    //padding-bottom: 20px;
-    //border-bottom: 1px solid #efefef;
+  }
+  /* Hide the not current project caption, etc. */
+  .caption.inactive,
+  .date.inactive,
+  .description.inactive {
+    display: none;
   }
 
   .more {
@@ -138,19 +144,14 @@
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-weight: 300;
     margin-right: 10px;
-    margin-top:23px;
+    margin-top: 23px;
     cursor: crosshair;
   }
-
 }
-
-
 /* /////////////////////////////////////////////////////////////////////
 //  0X - Slider Buttons
 /////////////////////////////////////////////////////////////////////*/
-
 @import 'swl-slider-buttons';
-
 /* /////////////////////////////////////////////////////////////////////
 //  0X - Project Grid Styles
 /////////////////////////////////////////////////////////////////////*/
@@ -186,14 +187,15 @@
   .projthumb-wrap {
     width: 100%;
     //padding: 0px 30px 20px 30px;
-    padding: 0 30px 0 30px;
+    padding: 0 30px;
     margin-top: 30px;
   }
+
   .projthumb {
     position: relative;
     width: 140px;
     height: 140px;
-    margin: 0 15px 70px 0px;
+    margin: 0 15px 70px 0;
     cursor: pointer;
     float: left;
     transition: display 0.5s;
@@ -202,7 +204,6 @@
   .projthumb.hide {
     display: none;
     transition: display 0.5s;
-
   }
 
   .projthumb img {
@@ -211,6 +212,7 @@
     top: 0;
     left: 0;
   }
+
   .projtext {
     position: absolute;
     width: 100%;
@@ -221,12 +223,14 @@
     overflow: hidden;
     //display: none;
   }
+
   .projthumb a {
     text-decoration: none;
     outline: 0;
     font-size: smaller;
     color: #373a3c;
   }
+
   .projthumb a:hover {
     //color: #800;
   }
@@ -234,14 +238,15 @@
 @media (min-width: 769px) {
   .projthumb-wrap {
     width: 100%;
-    padding: 0px 105px 20px 105px;
+    padding: 0 105px 20px;
     margin-top: 30px;
   }
+
   .projthumb {
     position: relative;
     width: 270px;
     height: 270px;
-    margin: 0 30px 70px 0px;
+    margin: 0 30px 70px 0;
     cursor: pointer;
     float: left;
     transition: display 0.5s;
@@ -250,7 +255,6 @@
   .projthumb.hide {
     display: none;
     transition: display 0.5s;
-
   }
 
   .projthumb img {
@@ -258,30 +262,32 @@
     top: 0;
     left: 0;
   }
+
   .projtext {
     position: absolute;
     width: 270px;
     font-size: small;
     display: none;
   }
+
   .projthumb a {
     text-decoration: none;
     outline: 0;
     font-size: smaller;
     color: #373a3c;
   }
+
   .projthumb a:hover {
     //color: #800;
+  }
 }
-}
-
 /* /////////////////////////////////////////////////////////////////////
 //  0X - Custom Pages
 /////////////////////////////////////////////////////////////////////*/
-
 .page__container {
   width: 100%;
 }
+
 .page__wrapper {
   width: calc(100% - 210px);
   font-size: small;
@@ -293,12 +299,13 @@
 .contact-left {
   width: 50%;
   float: left;
-  padding: 30px 30px 0px 0;
+  padding: 30px 30px 0 0;
 }
+
 .contact-right {
   width: 50%;
   float: right;
-  padding: 30px 30px 0px 0;;
+  padding: 30px 30px 0 0;
 }
 
 .page__wrapper h1 {
@@ -310,9 +317,7 @@
   text-transform: uppercase;
 }
 
-.profile {
-
-}
+.profile {}
 
 #map {
   //height: 400px; //calc(100% - 105px);
@@ -320,16 +325,15 @@
 }
 
 .footer_copyright {
-    display: none;
+  display: none;
 }
-
 @media (min-width: 769px) {
-    .footer_copyright {
-        font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-        font-weight: 300;
-        font-size: smaller;
-        bottom: 15px;
-        right: 15px;
-        position: fixed;
-    }
+  .footer_copyright {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-weight: 300;
+    font-size: smaller;
+    bottom: 15px;
+    right: 15px;
+    position: fixed;
+  }
 }

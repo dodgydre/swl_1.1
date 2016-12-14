@@ -82,6 +82,7 @@
             }
         }
 
+
         // Hide Images and Fade in the first one
         if (!$.browser.msie) {
             if ($("#proj_img").length > 0) {
@@ -95,12 +96,6 @@
                 $('.single-footer__caption').html(caption);
                 $('.single-footer__caption-date').html(imagedate);
                 $('.single-below-footer__description').html(description);
-
-                // TODO: Check why this on load isn't working!!
-                /*firstImg.on('load',function(){
-                  console.log('showing');
-                  $(this).fadeIn(400);
-                });*/
             }
         }
 
@@ -125,11 +120,17 @@
                     $('.single-footer__caption').html(caption);
                     $('.single-footer__caption-date').html(imagedate);
                     $('.single-below-footer__description').html(description);
+
+                    // Bring back the arrows if we go big again.
+                    $('.arrw').show();
                 }
             } else {
                 $('body').removeClass('large').addClass('mobile');
                 $('#proj_img').removeClass('large').addClass('mobile');
                 $('#proj_img_container').removeClass('large').addClass('mobile');
+
+                // take away the arrows when we go small.
+                $('.arrw').hide();
             }
             resizeSite();
         });
@@ -272,12 +273,6 @@
                 History.pushState(null, null, href);
             }
 
-            if (dir == "l" || dir == "r") {
-                // TODO: if footer is expanded then close the footer
-            }
-
-
-
             return false;
         }); // close >> #proj_img.project .arrw click
 
@@ -342,6 +337,18 @@
         $('#site, .scrollwrap, .site').width(ww).height(iah);
         $('#proj_img').width(ww).height(iah);
         $('#proj_img').css('width', ww + "px").css('height', iah + "px");
+
+        // If the window is less than 769 hide the arrows and size the images.
+        if ($('body').hasClass('mobile')) {
+            $('.arrw').hide();
+            $('#proj_img img').each(function() {
+                $(this).removeClass('slide').addClass('single_project_image');
+                $(this).hide();
+            });
+            $('.proj.active img').each(function() {
+                $(this).css('width', '100%').css('display', 'block').css('height', '').show();
+            });
+        }
 
         // resize each picture
         $('#proj_img .slide').each(function() {
@@ -526,9 +533,6 @@
     }
     /* End: adjustFooterHeight */
 
-
-
-
     /* Get Current Page URL */
     function getPage(href, push) {
         if (href[0] != "/") {
@@ -665,6 +669,7 @@
                 duraction: speed - 100,
                 easing: easing
             }).hide().css("top", currentTop + "px");
+
             slideToShow.css("top", (imgDim[3] - wh - gutter) + "px").show(0).stop().animate({
                 top: imgDim[3]
             }, {
@@ -689,7 +694,14 @@
         }
 
         thisProj.removeClass("active");
+        thisProj.find('.caption').addClass('inactive');
+        thisProj.find('.description').addClass('inactive');
+        thisProj.find('.date').addClass('inactive');
+
         nextProj.addClass("active");
+        nextProj.find('.caption').removeClass('inactive');
+        nextProj.find('.description').removeClass('inactive');
+        nextProj.find('.date').removeClasss('inactive');
 
         caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
         description = $('#proj_img .active img').first().nextAll('.description').first().html();

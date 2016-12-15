@@ -18,7 +18,7 @@ get_header();
                     $img = wp_get_attachment_image_src($tn_id, 'featured-large');
                     $img_ratio = $img[1] / $img[2];
 
-                    $description = get_the_content();
+                    $description = apply_filters('the_content', get_the_content());
 
                     if (rwmb_meta('swl_cv_download')) {
                         $description .= '<br />Download more details:';

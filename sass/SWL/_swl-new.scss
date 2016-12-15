@@ -71,8 +71,11 @@
 }
 
 .single_project_image {
+  border-bottom: 1px solid $color__border-swl;
   height: auto;
+  margin-top: 15px;
   max-width: 100%;
+  padding-bottom: 15px;
 }
 // Hide the caption, etc. in large screens.
 // these are shown in single footer

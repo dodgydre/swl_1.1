@@ -427,10 +427,10 @@ function display_custom_quickedit_fpimage($column_name, $post_type)
                 <?php
                 switch ($column_name) {
                     case 'ignore':
-                    ?><span class="title">Ignore</span><input name="ignore" type="checkbox" /><?php
+                    ?><span class="title">Ignore</span><input name="fp_ignore" type="checkbox" /><?php
                     break;
                     case 'fullscreen':
-                    ?><span class="title">Fullscreen</span><input name="fullscreen" type="checkbox" /><?php
+                    ?><span class="title">Fullscreen</span><input name="fp_fullscreen" type="checkbox" /><?php
                     break;
                 }
     ?>
@@ -459,13 +459,13 @@ function save_fpimage_meta($post_id)
         return;
     }
 
-    if (isset($_REQUEST['ignore'])) {
+    if (isset($_REQUEST['fp_ignore'])) {
         update_post_meta($post_id, 'fp_ignore', '1');
     } else {
         update_post_meta($post_id, 'fp_ignore', '0');
     }
 
-    if (isset($_REQUEST['fullscreen'])) {
+    if (isset($_REQUEST['fp_fullscreen'])) {
         update_post_meta($post_id, 'fp_full_screen', '1');
     } else {
         update_post_meta($post_id, 'fp_full_screen', '0');

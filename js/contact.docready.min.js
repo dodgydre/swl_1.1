@@ -16,8 +16,7 @@ var ww = $(window).width(),
     speed = 400,
     fadeOutSpeed = 300,
     fadeInSpeed = 700,
-    currenturl = window.location.pathname,
-    centered = true;
+    currenturl = window.location.pathname;
 
 $(document).ready(function() {
 
@@ -254,220 +253,122 @@ function resizeSite() {
 
     }
     else {
-      if(centered) {
-        imgResize(thisimg, ww, iah, "position", 0, 0, 0, 0);
-      }
-      else {
-        imgResizeLeft(thisimg, ww, iah, "position", 45, 0, 45, 0);
-      }
+      imgResize(thisimg, ww, iah, "position", 0, 0, 0, 0);
     }
   });
   //end resize each picture
   // NOTE: splash3
-  $(".arrw.left, .arrw.right").not('.small').height(iah).width(ww/2).css("top","0");
+  $(".arrw.left, .arrw.right").not('.small').height(iah).width((ww/2)-(ww/10)).css("top","0");
 
 }
 /* End Resize Site */
 
 /* Resize Image */
 function imgResize(el, cw, ch, prop, woff, hoff, loff, toff) {
-  // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
-  var iR = parseFloat(el.data("r"));
-  var sf = el.data("f");
+    // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
+    var iR, sf, fit;
+    var cR, ih, iw, imt, iml;
 
-  if(sf == 200) {
-    sf = 1;
-    var fit = false;
-  }
-  else {
-    sf = parseFloat(sf/100);
-    var fit = true;
-  }
+    iR = parseFloat(el.data("r"));
+    cR = (cw - woff) / (ch - hoff);
+    sf = el.data("f");
 
-  //element ratio
-  var ir = parseFloat(el.data("r"));
-  if (!ir) {
-    ir = el.width() / el.height();
-  }
-  //scale factor
-  if (!sf) {
-    sf = 1;
-  }
+    if (sf == 200) {
+        sf = 1;
+        fit = false;
+    } else {
+        sf = parseFloat(sf / 100);
+        fit = true;
+    }
 
-  // fit inside container
-  if (fit) {
-    var cr = (cw - woff) / (ch - hoff);
-    if (cr > ir) {
-      var ih = (ch - hoff) * sf;
-      var iw = ih * ir;
+    //element ratio
+    if (!iR) {
+        iR = el.width() / el.height();
+    }
+    //scale factor
+    if (!sf) {
+        sf = 1;
+    }
+
+    // fit inside container
+    if (fit) {
+        //cR = (cw - woff) / (ch - hoff);
+        if (cR > iR) {
+            ih = (ch - hoff) * sf;
+            iw = ih * iR;
+        } else {
+            iw = (cw - woff) * sf;
+            ih = iw / iR;
+        }
+        imt = (ch - hoff - ih) / 2;
+        iml = (cw - woff - iw) / 2;
     }
     else {
-      var iw = (cw - woff) * sf;
-      var ih = iw / ir;
+        // fill container
+        //cr = (cw / ch);
+        if (ir < 1) {
+            //image is portrait
+            iw = cw;
+            ih = iw / iR;
+            if (ih < ch) {
+                ih = ch;
+                iw = ih * ir;
+                iml = (cw - iw) / 2 - loff;
+                imt = (ch - ih) / 2 - toff;
+            } else {
+                imt = (ch - ih) / 2 - toff;
+                iml = (cw - iw) / 2 - loff;
+            }
+        } else {
+            // image is landscape
+            ih = ch;
+            iw = ih * ir;
+
+            if (iw < cw) {
+                iw = cw;
+                ih = iw / ir;
+            }
+
+            iml = (cw - iw) / 2 - loff;
+            imt = (ch - ih) / 2 - toff;
+        }
     }
-    var imt = (ch - hoff - ih) / 2;
-    var iml = (cw - woff - iw) / 2;
-  }
-  // fill container
-  else {
-    var cr = (cw / ch);
-    if (ir < 1) {
-      //image is portrait
-      var iw = cw;
-      var ih = iw/ir;
-      if (ih < ch) {
-        var ih = ch;
-        var iw = ih * ir;
-        var iml = (cw - iw) / 2 - loff;
-        var imt = (ch - ih) / 2 - toff;
-      }
-      else {
-        var imt = (ch - ih) / 2 - toff;
-        var iml = (cw - iw) / 2 - loff;
-      }
+
+    if (el.hasClass('full')) {
+        console.log('resizing');
+        if (cR > iR) {
+            iw = cw;
+            ih = iw / iR;
+            iml = 0;
+            imt = -(iw - cw) / 2;
+        } else {
+            ih = ch;
+            iw = ih * iR;
+            iml = -(ih - ch) / 2;
+            imt = 0;
+        }
     }
-    // image is landscape
-    else {
-      var ih = ch;
-      var iw = ih * ir;
 
-      if (iw < cw) {
-        var iw = cw;
-        var ih = iw/ir;
-      }
-
-      var iml = (cw - iw) / 2 - loff;
-      var imt = (ch - ih) / 2 - toff;
-      //imt = 0;
+    if (prop == "margin") {
+        el.width(iw).height(ih).css({
+            marginTop: imt + "px",
+            marginLeft: iml + "px"
+        });
+    } else if (prop == "position") {
+        el.width(iw).height(ih).css({
+            top: imt + "px",
+            left: iml + "px"
+        });
+    } else if (prop == "array") {
+        var imgDim = new Array(4);
+        imgDim[0] = iw;
+        imgDim[1] = ih;
+        imgDim[2] = iml;
+        imgDim[3] = imt;
+        return imgDim;
     }
-  }
-
-  if(el.hasClass('full')) {
-    var iw = cw;
-    var ih = ch;
-    var iml = 0;
-    var imt = 0;
-  }
-
-  //imt = 0;
-  if (prop == "margin") {
-    el.width(iw).height(ih).css({marginTop:imt+"px", marginLeft:iml+"px"});
-  }
-  else if (prop == "position") {
-    el.width(iw).height(ih).css({top:imt+"px",left:iml+"px"});
-  }
-  else if (prop == "array") {
-    //el.width(iw).height(ih);
-    var imgDim = new Array(4);
-    imgDim[0] = iw;
-    imgDim[1] = ih;
-    imgDim[2] = iml;
-    imgDim[3] = imt;
-    return imgDim;
-  }
 }
 /* End Resize Image */
-
-/* Resize Image - Left Justify */
-function imgResizeLeft(el, cw, ch, prop, woff, hoff, loff, toff) {
-  // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
-  var iR = parseFloat(el.data("r"));
-  var sf = el.data("f");
-
-  if(sf == 200) {
-    sf = 1;
-    var fit = false;
-  }
-  else {
-    sf = parseFloat(sf/100);
-    var fit = true;
-  }
-
-  //element ratio
-  var ir = parseFloat(el.data("r"));
-  if (!ir) {
-    ir = el.width() / el.height();
-  }
-  //scale factor
-  if (!sf) {
-    sf = 1;
-  }
-
-  // fit inside container
-  if (fit) {
-    var cr = (cw - woff) / (ch - hoff);
-    if (cr > ir) {
-      var ih = (ch - hoff) * sf;
-      var iw = ih * ir;
-    }
-    else {
-      var iw = (cw - woff) * sf;
-      var ih = iw / ir;
-    }
-    var imt = (ch - hoff - ih) / 2;
-    var iml = (cw - woff - iw) / 2;
-  }
-  // fill container
-  else {
-    var cr = (cw / ch);
-    if (ir < 1) {
-      //image is portrait
-      var iw = cw;
-      var ih = iw/ir;
-      if (ih < ch) {
-        var ih = ch;
-        var iw = ih * ir;
-        var iml = (cw - iw) / 2 - loff;
-        var imt = (ch - ih) / 2 - toff;
-      }
-      else {
-        var imt = (ch - ih) / 2 - toff;
-        var iml = (cw - iw) / 2 - loff;
-      }
-    }
-    // image is landscape
-    else {
-      var ih = ch;
-      var iw = ih * ir;
-
-      if (iw < cw) {
-        var iw = cw;
-        var ih = iw/ir;
-      }
-
-      var iml = (cw - iw) / 2 - loff;
-      var imt = (ch - ih) / 2 - toff;
-      //imt = 0;
-    }
-  }
-
-  if(el.hasClass('full')) {
-    var iw = cw;
-    var ih = ch;
-    var iml = 0;
-    var imt = 0;
-  }
-
-  var iml = loff;
-
-  //imt = 0;
-  if (prop == "margin") {
-    el.width(iw).height(ih).css({marginTop:imt+"px", marginLeft:iml+"px"});
-  }
-  else if (prop == "position") {
-    el.width(iw).height(ih).css({top:imt+"px",left:iml+"px"});
-  }
-  else if (prop == "array") {
-    //el.width(iw).height(ih);
-    var imgDim = new Array(4);
-    imgDim[0] = iw;
-    imgDim[1] = ih;
-    imgDim[2] = iml;
-    imgDim[3] = imt;
-    return imgDim;
-  }
-}
-/* End Resize Image - Left Justify */
 
 /* Start: adjustFooterHeight */
 function adjustFooterHeight() {

@@ -739,17 +739,11 @@ object {
 /*--------------------------------------------------------------
 # SWL
 --------------------------------------------------------------*/
-/* /////////////////////////////////////////////////////////////////////
-//  0X - General Site Layout
-/////////////////////////////////////////////////////////////////////*/
 #site {
   height: 100%;
-  width: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  width: 100%; }
 
-/* /////////////////////////////////////////////////////////////////////
-//  0X - Header and Menu Bar and Footer
-/////////////////////////////////////////////////////////////////////*/
 /* /////////////////////////////////////////////////////////////////////
 //  0X - Header
 /////////////////////////////////////////////////////////////////////*/
@@ -1369,29 +1363,23 @@ a.single-expand:hover {
   .search-icon {
     display: none; } }
 
-/* /////////////////////////////////////////////////////////////////////
-//  0X - Content
-/////////////////////////////////////////////////////////////////////*/
 .content {
   margin-top: 45px;
+  position: absolute;
   top: 0;
-  width: 100%;
-  position: absolute; }
+  width: 100%; }
 
 #image_container,
 #proj_img {
-  /*background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;*/
+  height: 100%;
   position: absolute;
-  width: 100%;
-  height: 100%; }
+  width: 100%; }
 
 #proj_img .slide {
-  position: absolute;
-  left: 0;
-  top: 0;
   display: none;
+  left: 0;
+  position: absolute;
+  top: 0;
   z-index: 4; }
 
 .proj.active img {
@@ -1408,12 +1396,15 @@ a.single-expand:hover {
     overflow: hidden; } }
 
 .project_image {
-  max-width: 100%;
-  height: auto; }
-
-.single_project_image {
   height: auto;
   max-width: 100%; }
+
+.single_project_image {
+  border-bottom: 1px solid #efefef;
+  height: auto;
+  margin-top: 15px;
+  max-width: 100%;
+  padding-bottom: 15px; }
 
 .caption {
   display: none; }
@@ -1442,44 +1433,40 @@ a.single-expand:hover {
     text-transform: capitalize;
     white-space: nowrap; }
   .description {
+    border-bottom: 1px solid #efefef;
+    clear: left;
     display: block;
-    max-height: 0;
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-weight: 300;
     height: 0;
-    overflow-y: auto;
+    line-height: 1.35em;
     margin: 20px;
+    max-height: 0;
+    overflow-y: auto;
     padding-bottom: 0;
     padding-left: 10px;
     padding-right: 10px;
-    border-bottom: 1px solid #efefef;
-    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-weight: 300;
-    line-height: 1.35em;
-    clear: left;
-    transition: height 1s, max-height 1s, padding-bottom 0.1s; }
+    transition: height 1s, max-height 1s, padding-bottom .1s; }
   .description.active {
-    max-height: 500px;
     height: auto;
+    max-height: 500px;
     padding-bottom: 20px;
-    transition: height 1s, max-height 1s, padding-bottom 0.1s; }
-  /* Hide the not current project caption, etc. */
+    transition: height 1s, max-height 1s, padding-bottom .1s; }
   .caption.inactive,
   .date.inactive,
   .description.inactive {
     display: none; }
   .more {
+    cursor: crosshair;
     display: inline-block;
-    width: 70px;
     float: right;
-    font-size: small;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: small;
     font-weight: 300;
     margin-right: 10px;
     margin-top: 23px;
-    cursor: crosshair; } }
+    width: 70px; } }
 
-/* /////////////////////////////////////////////////////////////////////
-//  0X - Slider Buttons
-/////////////////////////////////////////////////////////////////////*/
 .arrw {
   display: block;
   opacity: 0;
@@ -1572,144 +1559,113 @@ a.arrw.right.small:hover {
   font-family: 'fontello';
 }
 */
-/* /////////////////////////////////////////////////////////////////////
-//  0X - Project Grid Styles
-/////////////////////////////////////////////////////////////////////*/
-/*
 @media (max-width: 768px) {
   .projthumb-wrap {
-    width: 100%;
-  }
-
-  .projthumb {
-    position: relative;
-    //width: 100%;
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  .projthumb img {
-    width: 100%;
-    height: auto;
-  }
-  .projtext {
-    display: block;
-    margin: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #818181;
-  }
-  .projthumb a {
-    text-decoration: none;
-    outline: 0;
-    color: #373a3c;
-  }
-}*/
-@media (max-width: 768px) {
-  .projthumb-wrap {
-    width: 100%;
+    margin-top: 30px;
     padding: 0 30px;
-    margin-top: 30px; }
+    width: 100%; }
   .projthumb {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    margin: 0 15px 70px 0;
     cursor: pointer;
     float: left;
-    transition: display 0.5s; }
+    height: 140px;
+    margin: 0 15px 70px 0;
+    position: relative;
+    transition: display .5s;
+    width: 140px; }
   .projthumb.hide {
     display: none;
-    transition: display 0.5s; }
+    transition: display .5s; }
   .projthumb img {
+    left: 0;
     position: absolute;
-    width: 100%;
     top: 0;
-    left: 0; }
+    width: 100%; }
   .projtext {
-    position: absolute;
-    width: 100%;
     font-size: smaller;
     font-weight: 300;
+    overflow: hidden;
+    position: absolute;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden; }
+    width: 100%; }
   .projthumb a {
-    text-decoration: none;
-    outline: 0;
+    color: #373a3c;
     font-size: smaller;
+    outline: 0;
+    text-decoration: none; }
+  .projthumb a:hover {
     color: #373a3c; } }
 
 @media (min-width: 769px) {
   .projthumb-wrap {
-    width: 100%;
+    margin-top: 30px;
     padding: 0 105px 20px;
-    margin-top: 30px; }
+    width: 100%; }
   .projthumb {
-    position: relative;
-    width: 270px;
-    height: 270px;
-    margin: 0 30px 70px 0;
     cursor: pointer;
     float: left;
-    transition: display 0.5s; }
+    height: 270px;
+    margin: 0 30px 70px 0;
+    position: relative;
+    transition: display .5s;
+    width: 270px; }
   .projthumb.hide {
     display: none;
-    transition: display 0.5s; }
+    transition: display .5s; }
   .projthumb img {
+    left: 0;
     position: absolute;
-    top: 0;
-    left: 0; }
+    top: 0; }
   .projtext {
-    position: absolute;
-    width: 270px;
+    display: none;
     font-size: small;
-    display: none; }
+    position: absolute;
+    width: 270px; }
   .projthumb a {
-    text-decoration: none;
-    outline: 0;
+    color: #373a3c;
     font-size: smaller;
+    outline: 0;
+    text-decoration: none; }
+  .projthumb a:hover {
     color: #373a3c; } }
 
-/* /////////////////////////////////////////////////////////////////////
-//  0X - Custom Pages
-/////////////////////////////////////////////////////////////////////*/
 .page__container {
   width: 100%; }
 
 .page__wrapper {
-  width: calc(100% - 210px);
-  font-size: small;
   font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+  font-size: small;
   font-weight: 300;
-  margin: 0 auto; }
+  margin: 0 auto;
+  width: calc(100% - 210px); }
+  .page__wrapper h1 {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: medium;
+    font-weight: 500;
+    margin-top: 0;
+    text-decoration: underline;
+    text-transform: uppercase; }
 
 .contact-left {
-  width: 50%;
   float: left;
-  padding: 30px 30px 0 0; }
+  padding: 30px 30px 0 0;
+  width: 50%; }
 
 .contact-right {
-  width: 50%;
   float: right;
-  padding: 30px 30px 0 0; }
-
-.page__wrapper h1 {
-  margin-top: 0;
-  font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-  font-weight: 500;
-  font-size: medium;
-  text-decoration: underline;
-  text-transform: uppercase; }
+  padding: 30px 30px 0 0;
+  width: 50%; }
 
 .footer_copyright {
   display: none; }
 
 @media (min-width: 769px) {
   .footer_copyright {
-    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-weight: 300;
-    font-size: smaller;
     bottom: 15px;
-    right: 15px;
-    position: fixed; } }
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: smaller;
+    font-weight: 300;
+    position: fixed;
+    right: 15px; } }
 
 /*# sourceMappingURL=style.css.map */

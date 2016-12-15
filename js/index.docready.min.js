@@ -198,6 +198,9 @@
             ww = $(window).width();
             wh = $(window).height();
 
+            cw = ww;
+            ch = wh - footerheight - headerheight;
+
             thislink = $(this);
 
             if (thislink.hasClass("left")) {
@@ -206,7 +209,7 @@
                 dir = "r";
             }
 
-            resizeSite();
+            //resizeSite();
 
 
             thisSlideShow = $("#proj_img");
@@ -232,10 +235,10 @@
                         current.fadeOut(fadeOutSpeed);
                         slideToShow.fadeIn(fadeInSpeed);
                     } else if (thisSlideShow.hasClass("sliding")) {
-                        imgDim = imgResize(slideToShow, ww, iah, "array", 0, 0, 0, 0);
+                        imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
                         currentLeft = current.offset().left;
-                        nextCurrentLeft = currentLeft + ww + gutter;
-                        nextNextLeft = (imgDim[2] - ww - gutter);
+                        nextCurrentLeft = currentLeft + cw + gutter;
+                        nextNextLeft = (imgDim[2] - cw - gutter);
 
                         // Retrieve the information for the next slide
                         caption = slideToShow.nextAll('.caption').first().html();
@@ -267,14 +270,18 @@
                             });
                     }
                 }
-            } else if (dir == "r") {
+            }
+            /**********   SLIDE RIGHT *********/
+            else if (dir == "r") {
                 if (thisProject.find(".slide").length > 1) {
                     if (current.nextAll(".proj.active .slide").first().length > 0) {
                         // If we're not on the last slide, move one forward
+                        console.log('next');
                         slideToShow = current.nextAll(".proj.active .slide").first();
 
                     } else {
                         // if we are on the last slide move back to the start
+                        console.log('first');
                         slideToShow = $(".proj.active .slide").first();
                     }
 
@@ -287,16 +294,17 @@
                         current.fadeOut(fadeOutSpeed);
                         slideToShow.fadeIn(fadeInSpeed);
                     } else if (thisSlideShow.hasClass("sliding")) {
-                        imgDim = imgResize(slideToShow, ww, iah, "array", 0, 0, 0, 0);
-
+                        imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
+                        console.log('ww, iah: ' + cw + " , " + ch);
+                        console.log('imgDim: ' + imgDim[0] + " , " + imgDim[1] + " , " + imgDim[2] + " , " + imgDim[3]);
                         currentLeft = current.offset().left;
-                        nextCurrentLeft = -(ww + gutter);
-                        nextNextLeft = (imgDim[2] + ww + gutter);
+                        nextCurrentLeft = -(cw + gutter);
+                        nextNextLeft = (imgDim[2] + cw + gutter);
+                        console.log("currentLeft, nextCurrentLeft, nextNextLeft, imgDim[2] : " + currentLeft + " , " + nextCurrentLeft + " , " + nextNextLeft + " , " + imgDim[2] );
+
                         caption = slideToShow.nextAll('.caption').first().html();
                         imagedate = slideToShow.nextAll('.date').first().html();
                         description = slideToShow.nextAll('.description').first().html();
-
-                        //$('.caption__overlay').fadeOut();
 
                         current
                             .stop()
@@ -379,7 +387,10 @@
 
     }); // close >> document(ready)
 
+
+    /**************************************************************************/
     /* Resize Site */
+    /**************************************************************************/
     function resizeSite() {
         var ww, wh, iah, minww, minwh, siteratio;
 
@@ -406,7 +417,6 @@
             });
         } else {
             // otherwise show them
-
             $('.arrw').show();
             $('#proj_img img').each(function() {
                 $(this).addClass('slide').removeClass('project_image');
@@ -442,7 +452,7 @@
                         .css('width', iw)
                         .css('height', iah)
                         .css('top', '0')
-                        .css('left', (-(iah * imageAspect - ww) / 2));
+                        .css('left', (-(iw - ww) / 2));
                 } else {
                     var ih = ww / imageAspect;
                     $(this)
@@ -451,11 +461,15 @@
                         .css('top', (-(ww / imageAspect - iah) / 2))
                         .css('left', '0');
                 }
-            } else {
+            } /*else { */
                 imgResize(thisimg, ww, iah, "position", 0, 0, 0, 0);
-            }
+            /*}*/
         });
         //end resize each picture
+
+        //$(".arrw.left, .arrw.right").height(iah).width((ww / 2) - (ww / 10));
+        $(".arrw.left, .arrw.right").not('.small').height(iah).width((ww/2) - (ww/10)).css("top","0");
+
 
         // Resize the projthumbs in the archive-project page
         $('.projthumb').each(function() {
@@ -466,7 +480,6 @@
                 iR = thisImg.data('r');
                 // square image
                 if (iR == 1.0) {
-                    console.log('square');
                     thisImg
                         .height(140)
                         .width(140)
@@ -561,9 +574,10 @@
     function imgResize(el, cw, ch, prop, woff, hoff, loff, toff) {
         // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
         var iR, sf, fit;
-        var cr, ih, iw, imt, iml;
+        var cR, ih, iw, imt, iml;
 
         iR = parseFloat(el.data("r"));
+        cR = (cw - woff) / (ch - hoff);
         sf = el.data("f");
 
         if (sf == 200) {
@@ -585,8 +599,8 @@
 
         // fit inside container
         if (fit) {
-            cr = (cw - woff) / (ch - hoff);
-            if (cr > iR) {
+            //cR = (cw - woff) / (ch - hoff);
+            if (cR > iR) {
                 ih = (ch - hoff) * sf;
                 iw = ih * iR;
             } else {
@@ -595,9 +609,13 @@
             }
             imt = (ch - hoff - ih) / 2;
             iml = (cw - woff - iw) / 2;
-        } else {
+            console.log("cR, iR, ch, cw, ih, iw, iml, imt : " +
+                cR + " , " + iR + " , " + ch + " , " + cw + " , " +
+                ih + " , " + iw + " , " + iml + " , " + imt );
+        }
+        else {
             // fill container
-            cr = (cw / ch);
+            //cr = (cw / ch);
             if (ir < 1) {
                 //image is portrait
                 iw = cw;
@@ -623,6 +641,21 @@
 
                 iml = (cw - iw) / 2 - loff;
                 imt = (ch - ih) / 2 - toff;
+            }
+        }
+
+        if (el.hasClass('full')) {
+            console.log('resizing full');
+            if (cR > iR) {
+                iw = cw;
+                ih = iw / iR;
+                iml = 0;
+                imt = -(iw - cw) / 2;
+            } else {
+                ih = ch;
+                iw = ih * iR;
+                iml = -(ih - ch) / 2;
+                imt = 0;
             }
         }
 

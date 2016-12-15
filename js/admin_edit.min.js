@@ -24,11 +24,11 @@
 			var $post_row = $( '#post-' + $post_id );
 
 			// get the data
-			var $ignore = !! $('.column-ignore>*', $post_row ).prop('checked');
-            var $fullscreen = !! $('.column-fullscreen>*', $post_row).prop('checked');
+			var $fp_ignore = !! $('.column-ignore>*', $post_row ).prop('checked');
+            var $fp_fullscreen = !! $('.column-fullscreen>*', $post_row).prop('checked');
 			// populate the data
-			$( ':input[name="ignore"]', $edit_row ).prop('checked', $ignore );
-            $( ':input[name="fullscreen"]', $edit_row ).prop('checked', $fullscreen );
+			$( ':input[name="fp_ignore"]', $edit_row ).prop('checked', $fp_ignore );
+            $( ':input[name="fp_fullscreen"]', $edit_row ).prop('checked', $fp_fullscreen );
 		}
 	};
 

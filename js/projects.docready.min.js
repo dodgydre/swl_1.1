@@ -139,8 +139,17 @@
 
         // Project Slider
         $("#proj_img.project .arrw").click(function() {
-            var thislink = $(this);
-            var dir;
+            var dir, thislink;
+            var thisSlideShow, slideToShow, thisProject, current;
+            var imgDim, currentLeft, nextCurrentLeft, nextNextLeft, caption, imagedate, description;
+
+            ww = $(window).width();
+            wh = $(window).height();
+
+            cw = ww;
+            ch = wh - footerheight - headerheight;
+
+            thislink = $(this);
 
             if ($(this).hasClass("left")) {
                 dir = "l";
@@ -182,11 +191,10 @@
                         current.fadeOut(fadeOutSpeed);
                         slideToShow.fadeIn(fadeInSpeed);
                     } else if (thisSlideShow.hasClass("sliding")) {
-                        // TODO: Check if Pete wants centred or Left oriented
-                        imgDim = imgResize(slideToShow, ww, iah, "array", 0, 0, 0, 0);
+                        imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
                         currentLeft = current.offset().left;
-                        nextCurrentLeft = currentLeft + ww + gutter;
-                        nextNextLeft = (imgDim[2] - ww - gutter);
+                        nextCurrentLeft = currentLeft + cw + gutter;
+                        nextNextLeft = ($imgDim[2] - cw - gutter);
 
                         current.stop().animate({
                             left: nextCurrentLeft
@@ -204,10 +212,10 @@
                     captionText = slideToShow.next("span").html();
                     $("footer .imgcap").html(captionText);
                     if (slideToShow.hasClass("video")) {
-                        $(".arrw.left, .arrw.right").height(iah / 2);
+                        $(".arrw.left, .arrw.right").height(ch / 2);
                         $(".arrw.down").hide();
                     } else {
-                        $("arrw.left, .arrw.right").height(iah - 120);
+                        $("arrw.left, .arrw.right").height(ch - 120);
                         $("arrw.down").show();
                     }
                     // If we want the image numebr...
@@ -237,10 +245,10 @@
                         slideToShow.fadeIn(fadeInSpeed);
                     } else if (thisSlideShow.hasClass("sliding")) {
 
-                        imgDim = imgResize(slideToShow, ww, iah, "array", 0, 0, 0, 0);
+                        imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
                         currentLeft = current.offset().left;
                         nextCurrentLeft = -(ww + gutter);
-                        nextNextLeft = (imgDim[2] + ww + gutter);
+                        nextNextLeft = ($imgDim[2] + ww + gutter);
                         current.stop().animate({
                             left: nextCurrentLeft
                         }, {
@@ -258,10 +266,10 @@
                     captionText = slideToShow.next("span").html();
                     $("#footer .imgcap").html(captionText);
                     if (slideToShow.hasClass("video")) {
-                        $(".arrw.left, .arrw.right").height(iah / 2);
+                        $(".arrw.left, .arrw.right").height(ch / 2);
                         $(".arrw.down").hide();
                     } else {
-                        $(".arrw.left, .arrw.right").height(iah - 120);
+                        $(".arrw.left, .arrw.right").height(ch - 120);
                         $(".arrw.down").show();
                     }
                 }
@@ -395,13 +403,13 @@
         var currentSlide = $(".slideshow .slide:visible");
         if (currentSlide.length > 0 && currentSlide.hasClass("video")) {
             if ($(".arrw.down").length > 0) {
-                $(".arrw.left, .arrw.right").height(iah / 2).width(ww / 2 - ww / 2);
+                $(".arrw.left, .arrw.right").height(iah / 2).width((ww / 2) - (ww / 10));
                 $(".arrw.down").hide();
             } else {
-                $(".arrw.left, .arrw.right").height(iah / 1.5).width(ww / 2 - ww / 2);
+                $(".arrw.left, .arrw.right").height(iah / 1.5).width((ww / 2) - (ww / 10));
             }
         } else {
-            $(".arrw.left, .arrw.right").height(iah - iah / 4).width(ww / 2 - ww / 10);
+            $(".arrw.left, .arrw.right").height(iah - iah / 4).width((ww / 2) - (ww / 10));
             $(".arrw.down").show();
         }
     }
@@ -411,9 +419,10 @@
     function imgResize(el, cw, ch, prop, woff, hoff, loff, toff) {
         // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
         var iR, sf, fit;
-        var cr, ih, iw, imt, iml;
+        var cR, ih, iw, imt, iml;
 
         iR = parseFloat(el.data("r"));
+        cR = (cw - woff) / (ch - hoff);
         sf = el.data("f");
 
         if (sf == 200) {
@@ -435,8 +444,8 @@
 
         // fit inside container
         if (fit) {
-            cr = (cw - woff) / (ch - hoff);
-            if (cr > iR) {
+            //cR = (cw - woff) / (ch - hoff);
+            if (cR > iR) {
                 ih = (ch - hoff) * sf;
                 iw = ih * iR;
             } else {
@@ -444,45 +453,52 @@
                 ih = iw / iR;
             }
             imt = (ch - hoff - ih) / 2;
-            //var imt = 0; // over-riding to force the image to be top of screen
             iml = (cw - woff - iw) / 2;
         }
-        // fill container
         else {
-            cr = (cw / ch);
-            if (iR < 1) {
+            // fill container
+            //cr = (cw / ch);
+            if (ir < 1) {
                 //image is portrait
                 iw = cw;
                 ih = iw / iR;
                 if (ih < ch) {
                     ih = ch;
-                    iw = ih * iR;
+                    iw = ih * ir;
                     iml = (cw - iw) / 2 - loff;
                     imt = (ch - ih) / 2 - toff;
                 } else {
                     imt = (ch - ih) / 2 - toff;
                     iml = (cw - iw) / 2 - loff;
                 }
-            }
-            // image is landscape
-            else {
+            } else {
+                // image is landscape
                 ih = ch;
-                iw = ih * iR;
+                iw = ih * ir;
+
                 if (iw < cw) {
                     iw = cw;
-                    ih = iw / iR;
+                    ih = iw / ir;
                 }
+
                 iml = (cw - iw) / 2 - loff;
                 imt = (ch - ih) / 2 - toff;
             }
         }
 
         if (el.hasClass('full')) {
-            /* TODO: CHANGE THIS BASED ON ELSEWHERE */
-            iw = cw;
-            ih = ch;
-            iml = 0;
-            imt = 0;
+            console.log('resizing');
+            if (cR > iR) {
+                iw = cw;
+                ih = iw / iR;
+                iml = 0;
+                imt = -(iw - cw) / 2;
+            } else {
+                ih = ch;
+                iw = ih * iR;
+                iml = -(ih - ch) / 2;
+                imt = 0;
+            }
         }
 
         if (prop == "margin") {
@@ -495,9 +511,6 @@
                 top: imt + "px",
                 left: iml + "px"
             });
-            if (el.hasClass('video')) {
-                el.find('iframe').height(ih).width(iw);
-            }
         } else if (prop == "array") {
             var imgDim = new Array(4);
             imgDim[0] = iw;
@@ -701,7 +714,7 @@
         nextProj.addClass("active");
         nextProj.find('.caption').removeClass('inactive');
         nextProj.find('.description').removeClass('inactive');
-        nextProj.find('.date').removeClasss('inactive');
+        nextProj.find('.date').removeClass('inactive');
 
         caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
         description = $('#proj_img .active img').first().nextAll('.description').first().html();

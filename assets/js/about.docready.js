@@ -17,7 +17,6 @@
     var fadeOutSpeed = 300;
     var fadeInSpeed = 700;
     var currenturl = window.location.pathname;
-    var centered = true;
 
     $(document).ready(function() {
 
@@ -87,8 +86,7 @@
     function resizeSite() {
        ww = $(window).width();
        wh = $(window).height();
-       //headerheight = $(".header__container").height();
-       //footerheight = $(".footer__container").height();
+
        iah = wh-headerheight-footerheight;
        siteratio = ww / iah;
 
@@ -135,10 +133,10 @@
 
         if ($(this).hasClass("full")) {
           var thisimg = $(this);
-          containerW = ww;
-          containerH = iah;
-          containerAspect = ww / iah;
-          imageAspect = iR;
+          var containerW = ww;
+          var containerH = iah;
+          var containerAspect = ww / iah;
+          var imageAspect = iR;
 
           if ( containerAspect < imageAspect ) {
               var iw = iah * imageAspect;
@@ -163,7 +161,7 @@
       });
       //end resize each picture
       // NOTE: splash3
-      $(".arrw.left, .arrw.right").not(".small").height(iah).width(ww/2).css("top","0");
+      $(".arrw.left, .arrw.right").not(".small").height(iah).width((ww/2)-(ww/10)).css("top","0");
 
     }
     /* End Resize Site */
@@ -171,21 +169,24 @@
     /* Resize Image */
     function imgResize(el, cw, ch, prop, woff, hoff, loff, toff) {
         // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
-        //var iR = parseFloat(el.data("r"));
-        var ih, iw, cr, ir, iml, imt, sf, fit;
+        var iR, sf, fit;
+        var cR, ih, iw, imt, iml;
 
+        iR = parseFloat(el.data("r"));
+        cR = (cw - woff) / (ch - hoff);
         sf = el.data("f");
-        if(sf == 200) {
+
+        if (sf == 200) {
             sf = 1;
             fit = false;
         } else {
-            sf = parseFloat(sf/100);
+            sf = parseFloat(sf / 100);
             fit = true;
         }
+
         //element ratio
-        ir = parseFloat(el.data("r"));
-        if (!ir) {
-            ir = el.width() / el.height();
+        if (!iR) {
+            iR = el.width() / el.height();
         }
         //scale factor
         if (!sf) {
@@ -194,21 +195,24 @@
 
         // fit inside container
         if (fit) {
-            cr = (cw - woff) / (ch - hoff);
-            if (cr > ir) {
+            //cR = (cw - woff) / (ch - hoff);
+            if (cR > iR) {
                 ih = (ch - hoff) * sf;
-                iw = ih * ir;
+                iw = ih * iR;
             } else {
                 iw = (cw - woff) * sf;
-                ih = iw / ir;
+                ih = iw / iR;
             }
             imt = (ch - hoff - ih) / 2;
             iml = (cw - woff - iw) / 2;
-        } else { // fill container
-            cr = (cw / ch);
-            if (ir < 1) { //image is portrait
+        }
+        else {
+            // fill container
+            //cr = (cw / ch);
+            if (ir < 1) {
+                //image is portrait
                 iw = cw;
-                ih = iw/ir;
+                ih = iw / iR;
                 if (ih < ch) {
                     ih = ch;
                     iw = ih * ir;
@@ -218,35 +222,47 @@
                     imt = (ch - ih) / 2 - toff;
                     iml = (cw - iw) / 2 - loff;
                 }
-            } else { // image is landscape
+            } else {
+                // image is landscape
                 ih = ch;
                 iw = ih * ir;
 
                 if (iw < cw) {
                     iw = cw;
-                    ih = iw/ir;
+                    ih = iw / ir;
                 }
 
                 iml = (cw - iw) / 2 - loff;
                 imt = (ch - ih) / 2 - toff;
-                //imt = 0;
             }
         }
 
-        if(el.hasClass("full")) {
-            iw = cw;
-            ih = ch;
-            iml = 0;
-            imt = 0;
+        if (el.hasClass('full')) {
+            console.log('resizing');
+            if (cR > iR) {
+                iw = cw;
+                ih = iw / iR;
+                iml = 0;
+                imt = -(iw - cw) / 2;
+            } else {
+                ih = ch;
+                iw = ih * iR;
+                iml = -(ih - ch) / 2;
+                imt = 0;
+            }
         }
 
-        //imt = 0;
         if (prop == "margin") {
-            el.width(iw).height(ih).css({marginTop:imt+"px", marginLeft:iml+"px"});
+            el.width(iw).height(ih).css({
+                marginTop: imt + "px",
+                marginLeft: iml + "px"
+            });
         } else if (prop == "position") {
-            el.width(iw).height(ih).css({top:imt+"px",left:iml+"px"});
+            el.width(iw).height(ih).css({
+                top: imt + "px",
+                left: iml + "px"
+            });
         } else if (prop == "array") {
-            //el.width(iw).height(ih);
             var imgDim = new Array(4);
             imgDim[0] = iw;
             imgDim[1] = ih;

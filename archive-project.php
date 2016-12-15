@@ -87,31 +87,35 @@ get_header();
             // Set the size to fit the thumbnail box and position properly.
             $tn_id = get_post_thumbnail_id($post->ID);
             $img = wp_get_attachment_image_src($tn_id, 'project_thumb');
-            $width = $img[1];
-            $height = $img[2];
-            $imageRatio = $width / $height;
 
-            if ($width == 270) {
-                $top = (270 - $height) / 2;
-                $details = 'width="270px" style="top: '.$top.'px;"';
-                $text_details = 'style="top: '.($height + $top + 5).'px;"';
-            } else {
-                $left = (270 - $width) / 2;
-                $details = 'height="270px" style="left: '.$left.'px;"';
-                $text_details = 'style="top: 275px; left: '.$left.'px;"';
-            }
         ?>
         <a href="<?php echo get_permalink($post->ID); ?>">
             <?php
                 if ($img[0] != '') {
-                ?>
-                    <img src="<?php echo $img[0] ?>" <?php echo $details; ?> data-r="<?php echo $imageRatio; ?>"/>
+                    $width = $img[1];
+                    $height = $img[2];
+                    $imageRatio = $width / $height;
+                    if ($width == 270) {
+                        $top = (270 - $height) / 2;
+                        $details = 'width="270px" style="top: '.$top.'px;"';
+                        $text_details = 'style="top: '.($height + $top + 5).'px;"';
+                    } else {
+                        $left = (270 - $width) / 2;
+                        $details = 'height="270px" style="left: '.$left.'px;"';
+                        $text_details = 'style="top: 275px; left: '.$left.'px;"';
+                    }
+
+                    ?>
+                    <img src="<?php echo $img[0] ?>" <?php echo $details;
+                    ?> data-r="<?php echo $imageRatio;
+                    ?>"/>
                 <?php
+
                 } else {
-                ?>
+                    ?>
                     <img src="http://placehold.it/270x270" width="270px" data-r="1.0"/>
                     <?php $text_details = 'style="top: 275px"';
-                 }
+                }
                 ?>
 
                 <div class="projtext" <?php echo $text_details; ?> >

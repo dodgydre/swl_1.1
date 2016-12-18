@@ -86,14 +86,14 @@ add_action('after_setup_theme', 'swl_setup');
 
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
- *
+ * Make this large so it doesn't mess up the scaling of images on big screens.  Maybe bigger yet?
  * Priority 0 to make it available to lower priority callbacks.
  *
  * @global int $content_width
  */
 function swl_content_width()
 {
-    $GLOBALS['content_width'] = apply_filters('swl_content_width', 2000);
+    $GLOBALS['content_width'] = apply_filters('swl_content_width', 2500);
 }
 add_action('after_setup_theme', 'swl_content_width', 0);
 

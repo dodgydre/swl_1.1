@@ -81,7 +81,6 @@
                 $('.search').hide();
                 $('.search-icon').hide();
 
-                //$('.caption__overlay').hide();
             }
             resizeSite();
         });
@@ -111,7 +110,6 @@
 
         /* Search Input Box Slideout */
         jQuery('#searchIcon').click(function() {
-            console.log('opening');
             if (jQuery('#searchElements').css('left') == '0px') {
                 jQuery('#searchElements').stop().animate({
                     left: -302
@@ -128,13 +126,6 @@
                 });
             }
         });
-
-        /*
-        $('.header__overlay-icon').click(function(e) {
-          $('#header__overlay-menu').toggleClass('is-active').fadeOut(400);
-          return false;
-        });
-        */
 
 
         /* ------ Button for Footer Expand ------- */
@@ -276,12 +267,10 @@
                 if (thisProject.find(".slide").length > 1) {
                     if (current.nextAll(".proj.active .slide").first().length > 0) {
                         // If we're not on the last slide, move one forward
-                        console.log('next');
                         slideToShow = current.nextAll(".proj.active .slide").first();
 
                     } else {
                         // if we are on the last slide move back to the start
-                        console.log('first');
                         slideToShow = $(".proj.active .slide").first();
                     }
 
@@ -295,12 +284,9 @@
                         slideToShow.fadeIn(fadeInSpeed);
                     } else if (thisSlideShow.hasClass("sliding")) {
                         imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
-                        console.log('ww, iah: ' + cw + " , " + ch);
-                        console.log('imgDim: ' + imgDim[0] + " , " + imgDim[1] + " , " + imgDim[2] + " , " + imgDim[3]);
                         currentLeft = current.offset().left;
                         nextCurrentLeft = -(cw + gutter);
                         nextNextLeft = (imgDim[2] + cw + gutter);
-                        console.log("currentLeft, nextCurrentLeft, nextNextLeft, imgDim[2] : " + currentLeft + " , " + nextCurrentLeft + " , " + nextNextLeft + " , " + imgDim[2] );
 
                         caption = slideToShow.nextAll('.caption').first().html();
                         imagedate = slideToShow.nextAll('.date').first().html();
@@ -478,35 +464,42 @@
                 thisImg = $(this).find('img');
                 thisText = $(this).find('.projtext');
                 iR = thisImg.data('r');
+                // Set the grid to be 3 squares wide on all mobiles
+                var pw = (ww - (3*30) - 20) / 3;
+                console.log(pw);
+                // set the size of the projthumb container
+                $(this).width(pw).height(pw);
+
                 // square image
                 if (iR == 1.0) {
                     thisImg
-                        .height(140)
-                        .width(140)
+                        .height(pw)
+                        .width(pw)
                         .css('left', '0px')
                         .css('top', '0px');
                     thisText
-                        .css('top', '145px')
+                        .css('top', (pw + 5) + 'px')
                         .css('left', '0px');
                 } else if (iR < 1.0) {
                     // portrait image
-                    width = iR * 140;
-                    imgleft = (140 - width) / 2;
+                    width = iR * pw;
+                    imgleft = (pw - width) / 2;
+                    imgleft = 0;
                     thisImg
-                        .height(140)
+                        .height(pw)
                         .width('auto')
                         .css('left', imgleft + 'px')
                         .css('top', '0px');
                     thisText
-                        .css('top', '145px')
+                        .css('top', (pw + 5) + 'px')
                         .css('left', imgleft + 'px');
                 } else {
                     // landscape image
-                    height = 140 / iR;
-                    imgtop = (140 - height) / 2;
+                    height = pw / iR;
+                    imgtop = (pw - height) / 2;
                     thisImg
                         .height('auto')
-                        .width(140)
+                        .width(pw)
                         .css('left', '0px')
                         .css('top', imgtop + 'px');
                     thisText
@@ -515,6 +508,7 @@
                 thisText.show();
             } else {
                 // DESKTOP Size
+                $(this).width('').height('');
 
                 thisImg = $(this).find('img');
                 thisText = $(this).find('.projtext');
@@ -556,7 +550,7 @@
                         .css('top', height + imgtop + 5 + 'px');
                 }
 
-                /* Add Hover to Desktop images */
+                /* Add Hover to Desktop images in Project Grid*/
                 $(this).hover(
                     function() {
                         $(this).find(".projtext").fadeIn(100);
@@ -609,9 +603,6 @@
             }
             imt = (ch - hoff - ih) / 2;
             iml = (cw - woff - iw) / 2;
-            console.log("cR, iR, ch, cw, ih, iw, iml, imt : " +
-                cR + " , " + iR + " , " + ch + " , " + cw + " , " +
-                ih + " , " + iw + " , " + iml + " , " + imt );
         }
         else {
             // fill container
@@ -645,7 +636,6 @@
         }
 
         if (el.hasClass('full')) {
-            console.log('resizing full');
             if (cR > iR) {
                 iw = cw;
                 ih = iw / iR;
@@ -682,9 +672,17 @@
 
     /* Start: adjustFooterHeight */
     function adjustFooterHeight() {
+        var ch = $(window).height() - headerheight - footerheight;
         var fh = $('.footer__container').height();
-        var bfh = $('.below-footer__container').outerHeight();
+        var bfh = $('.below-footer__container')[0].scrollHeight;
         if (bfh < 33) bfh = 0;
+
+        if(bfh > (ch - 150)) {
+            bfh = ch - 150;
+            $(".below-footer__description").height(bfh).css('overflow-y', 'scroll');
+            $(".below-footer__container").css('overflow-y', 'scroll');
+        }
+
         $(".footer__container")
             .stop()
             .animate({
@@ -699,6 +697,7 @@
             duration: 200,
             easing: 'jswing'
         });
+        $(".below-footer__container").height(bfh);
 
     }
     /* End: adjustFooterHeight */

@@ -29,7 +29,6 @@ $(document).ready(function() {
 
   /* ------ Button for menu dropdown on smaller screens ------- */
   $('.header__icon').click(function(e) {
-    //$('#header__overlay-menu').toggleClass('is-active').fadeIn(400);
     $('.header__icon').toggleClass('is-active');
     $('.large-menu').toggleClass('is-active');
     $('.large-menu-filter').toggleClass('is-active');

@@ -524,9 +524,17 @@
 
     /* Start: adjustFooterHeight */
     function adjustFooterHeight() {
+        var ch = $(window).height() - footerheight - headerheight;
         var fh = $('.single-footer__container').height();
         var bfh = $('.single-below-footer__container').outerHeight();
         if (bfh < 33) bfh = 0;
+
+        if(bfh > (ch - 150)) {
+            bfh = ch - 150;
+            $(".single-below-footer__description").height(bfh).css('overflow-y', 'scroll');
+            $(".single-below-footer__container").css('overflow-y', 'scroll');
+        }
+
         $('.single-footer__container')
             .stop()
             .animate({
@@ -543,6 +551,7 @@
                 duration: 200,
                 easing: 'jswing'
             });
+        $(".single-below-footer__container").height(bfh);
     }
     /* End: adjustFooterHeight */
 

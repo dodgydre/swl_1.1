@@ -2,6 +2,14 @@ var elixir = require('laravel-elixir');
 
 elixir.config.assetsPath = './';
 
+elixir.config.css.autoprefix = {
+    enabled: true,
+    options: {
+        cascade: true,
+        browsers: ['last 2 versions', '> 1%']
+    }
+};
+
 /* Task 1: Compile SASS */
 elixir(function(mix) {
     mix.sass('./sass/style.scss', './style.css');

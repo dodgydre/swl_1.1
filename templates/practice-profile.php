@@ -23,6 +23,9 @@
         <div class="jobs">
           <!--<div class="slide">-->
             <img src="<?php echo $img[0]; ?>" class="slide full" style="display: none" data-r="<?php echo $img_ratio; ?>">
+            <span class="caption"><?php echo the_title(); ?></span>
+            <span class="more">/ Read More</span>
+            <span class="description"><?php echo the_content(); ?></span>
           <!--</div>-->
 
         </div>

@@ -13,17 +13,17 @@
 
     	<?php while (have_posts()) : the_post(); ?>
 
-        <div class="contact-left">
-            <div id="map">
-
-            </div>
-        </div>
-
         <div class="contact-right">
 
             <?php echo the_content(); ?>
 
-            <a href="https://www.instagram.com/structure.workshop/"><img src="<?php echo get_template_directory_uri(); ?>/images/instagram.png" alt="SWL on Instagram" width="25px" height="25px"/></a>
+            <a href="https://www.instagram.com/structure.workshop/"><img src="<?php echo get_template_directory_uri(); ?>/images/inst.png" alt="SWL on Instagram" width="25px" height="25px"/></a>
+        </div>
+
+        <div class="contact-left">
+            <div id="map">
+
+            </div>
         </div>
 
     	<?php endwhile; ?>

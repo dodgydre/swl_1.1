@@ -696,7 +696,7 @@
             nextProj = $(".proj:first-child");
         }
         // If the next project is currently empty, load in the images
-        if (nextProj.html() === "") {
+        if (nextProj.find('proj_wrapper').first().html() === "") {
             getNewProject(thisProj, "", nextProj, "", false);
         }
 
@@ -709,7 +709,7 @@
         }
 
         // If the previous project is currently empty, load in the images
-        if (prevProj.html() === "") {
+        if (prevProj.find('proj_wrapper').first().html() === "") {
             getNewProject(thisProj, "", prevProj, "", false);
         }
     }

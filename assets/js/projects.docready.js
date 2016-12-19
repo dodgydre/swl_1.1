@@ -23,9 +23,12 @@
 
         /* -------  If smaller screen add mobile class to main div --------- */
         if ($(window).width() > 769) {
+            headerheight = 105;
+            iah = wh - footerheight - headerheight;
             $('body').addClass('large').removeClass('mobile');
             $('#proj_img').addClass('large').removeClass('mobile');
             $('#proj_img_container').addClass('large').removeClass('mobile');
+            $('#proj_img_container').height(iah);
             $('#proj_img img').addClass('slide');
         } else {
             headerheight = 45;
@@ -392,8 +395,8 @@
 
         // resize the container
         $('#site, .scrollwrap, .site').width(ww).height(iah);
-        $('#proj_img').width(ww).height(iah);
-        $('#proj_img').css('width', ww + "px").css('height', iah + "px");
+        //$('#proj_img').width(ww).height(iah);
+        //$('#proj_img').css('width', ww + "px").css('height', iah + "px");
 
         // If the window is less than 769 hide the arrows and size the images.
         if ($('body').hasClass('mobile')) {
@@ -403,9 +406,9 @@
                 //$(this).hide();
                 $(this).css('width', ww + 'px').css('height', '').css('display', '');
             });
-            /*$('.proj.active img').each(function() {
+            $('.proj.active img').each(function() {
                 $(this).css('display', 'block').show();
-            });*/
+            });
             $('.proj_wrapper').each(function() {
                 $(this).css('width', ww + 'px').height($(window).height() - 90);
             });
@@ -788,8 +791,11 @@
                     left: ww
                 }, {
                     duration: 50,
-                    easing: easing
-                }).hide().css("left", "0px");
+                    easing: easing,
+                    complete: function() {
+                        $(this).hide().css("left", "0");
+                    }
+                });
 
                 //slideToShow.css('height',$(window).height() - 90);
                 slideToShow.css("left", "-" + ww + "px").show(0).stop().animate({
@@ -804,8 +810,11 @@
                     left: -ww
                 }, {
                     duration: 50,
-                    easing: easing
-                }).hide(0).css("left", "0px");
+                    easing: easing,
+                    complete: function() {
+                        $(this).hide(0).css("left", "0px");
+                    }
+                });
 
                 //slideToShow.css('height',$(window).height() - 90);
                 slideToShow.css("left", ww + "px").show(0).stop().animate({

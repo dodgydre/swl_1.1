@@ -25,23 +25,31 @@
 
 #image_container,
 #proj_img {
-  //background-image: url("../images/project_imgs/1.jpg");
-  //background-position: center center;
-  //background-size: cover;
-  //background-repeat: no-repeat;
   height: 100%;
-  position: absolute;
+  //position: absolute;
+  position: relative;
   width: 100%;
+
+  &.mobile {
+    margin-bottom: 45px;
+  }
 }
 
-#proj_img .slide {
-  display: none;
-  left: 0;
-  position: absolute;
-  top: 0;
-  z-index: 4;
-}
+#proj_img {
+  .slide {
+    display: none;
+    left: 0;
+    position: absolute;
+    top: 0;
+    z-index: 4;
+  }
 
+  &.mobile {
+    height: 100%;
+    position: relative;
+    width: 100%;
+  }
+}
 
 .proj.active img {
   //max-height: 100%;
@@ -79,7 +87,7 @@
 .single_project_image {
   border-bottom: 1px solid $color__border-swl;
   height: auto;
-  margin-top: 15px;
+  //margin-top: 15px;
   max-width: 100%;
   padding-bottom: 15px;
 }

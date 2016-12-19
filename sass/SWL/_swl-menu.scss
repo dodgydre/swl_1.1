@@ -184,9 +184,7 @@
 
 @media (max-width: 768px) {
   .footer__container,
-  .below-footer__container,
-  .single-footer__container,
-  .single-below-footer__container {
+  .below-footer__container {
     display: none;
   }
 }
@@ -222,49 +220,90 @@
 ///////////////////////////////////////////////////////////////////////
 //  0X - Footer - Single Project Page
 ///////////////////////////////////////////////////////////////////////
-.single-footer__container {
-  background-color: $color__background-body;
-  bottom: 0;
-  height: 45px;
-  left: 0;
-  position: fixed;
-  width: 100%;
-  z-index: 20;
-  //overflow-y: hidden;
+.single-project-date,
+.single-project-caption,
+.single-project-description {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .single-footer__container {
+    background-color: $color__background-body;
+    bottom: 0;
+    display: block;
+    height: 45px;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 20;
+  }
+
+  .single-footer__wrapper {
+    height: 30px;
+    line-height: 30px;
+    margin: 0 auto;
+    overflow: scroll;
+    width: calc(100% - 60px);
+  }
 
   .single-footer__caption-date {
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-size: small;
+    font-size: smaller;
     font-weight: 400;
-    width: 6em;
+    width: 3em;
   }
 
   .single-footer__caption {
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-size: small;
+    font-size: smaller;
     font-weight: 400;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
     text-transform: uppercase;
-    //width: 25em;
-    //margin-right: 50px;
+    white-space: nowrap;
+    width: 10em;
   }
 
   .single-footer__more {
-    float: left;
+    float: right;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-size: small;
+    font-size: smaller;
     font-weight: 300;
     padding-left: .5em;
-    width: 6em;
+    width: 4em;
   }
 
-  &.expanded {
+  .single-project > .caption {
+    display: none;
+  }
+}
+
+
+@media (min-width: 769px) {
+  .single-footer__wrapper {
+    height: 30px;
+    line-height: 30px;
+    margin: 0 auto;
+    overflow: hidden;
+    width: calc(100% - 210px);
+  }
+
+  .single-footer__container {
+    background-color: $color__background-body;
+    bottom: 0;
+    height: 45px;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 20;
+
     .single-footer__caption-date {
       float: left;
       font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       font-size: small;
-      font-weight: 300;
+      font-weight: 400;
       width: 6em;
     }
 
@@ -272,7 +311,8 @@
       float: left;
       font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       font-size: small;
-      font-weight: 300;
+      font-weight: 400;
+      text-transform: uppercase;
       //width: 25em;
       //margin-right: 50px;
     }
@@ -282,52 +322,106 @@
       font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       font-size: small;
       font-weight: 300;
+      padding-left: .5em;
       width: 6em;
     }
-  }
-}
 
-.single-footer__wrapper {
-  height: 30px;
-  line-height: 30px;
-  margin: 0 auto;
-  overflow: hidden;
-  width: calc(100% - 210px);
-}
+    &.expanded {
+      .single-footer__caption-date {
+        float: left;
+        font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+        font-size: small;
+        font-weight: 300;
+        width: 6em;
+      }
 
-@media (max-width: 768px) {
-  .single-footer__container {
-    display: none;
+      .single-footer__caption {
+        float: left;
+        font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+        font-size: small;
+        font-weight: 300;
+        //width: 25em;
+        //margin-right: 50px;
+      }
+
+      .single-footer__more {
+        float: left;
+        font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+        font-size: small;
+        font-weight: 300;
+        width: 6em;
+      }
+    }
   }
 }
 
 ///////////////////////////////////////////////////////////////////////
 //  0X - Below Footer - Single Project page
 ///////////////////////////////////////////////////////////////////////
-.single-below-footer__container {
-  background-color: $color__background-body;
-  left: 0;
-  position: fixed;
-  top: 100%;
-  width: 100%;
-  z-index: 20;
+@media (max-width: 768px) {
+  .proj {
+    display: none;
+    position: absolute;
+
+    &.active {
+      display: block;
+      margin-bottom: 45px;
+    }
+  }
+
+  .single-below-footer__container {
+    background-color: $color__background-body;
+    left: 0;
+    position: fixed;
+    top: 100%;
+    width: 100%;
+    z-index: 20;
+  }
+
+  .single-below-footer__wrapper {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-weight: 300;
+    line-height: 1.25rem;
+    margin-bottom: 20px;
+    margin-left: 30px;
+    margin-top: 20px;
+    overflow: hidden;
+    width: 50%;
+  }
+
+  .single-below-footer__description {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: small;
+  }
 }
 
-.single-below-footer__wrapper {
-  font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-  font-weight: 300;
-  line-height: 1.25rem;
-  margin-bottom: 20px;
-  margin-left: 105px;
-  margin-top: 20px;
-  overflow: hidden;
-  width: 50%;
+@media (min-width: 769px) {
+  .single-below-footer__container {
+    background-color: $color__background-body;
+    left: 0;
+    position: fixed;
+    top: 100%;
+    width: 100%;
+    z-index: 20;
+  }
+
+  .single-below-footer__wrapper {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-weight: 300;
+    line-height: 1.25rem;
+    margin-bottom: 20px;
+    margin-left: 105px;
+    margin-top: 20px;
+    overflow: hidden;
+    width: 50%;
+  }
+
+  .single-below-footer__description {
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: small;
+  }
 }
 
-.single-below-footer__description {
-  font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-  font-size: small;
-}
 
 ///////////////////////////////////////////////////////////////////////
 //  0X - Pop-out Menu

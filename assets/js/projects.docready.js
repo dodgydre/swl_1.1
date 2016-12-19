@@ -32,13 +32,14 @@
             $('#proj_img').removeClass('large').addClass('mobile');
             $('#proj_img_container').removeClass('large').addClass('mobile');
             $('#proj_img img').removeClass('slide');
+            $('.single-footer__more').text(' / More');
             $('.arrw').hide();
         }
 
         resizeSite();
 
         /* -------  Button for footer expand --------- */
-        if($('body').hasClass('large')) {
+        if(/*$('body').hasClass('large')*/1) {
             $('.single-expand').click(function(e) {
                 e.preventDefault();
                 /* IF the footer is already expanded then lower it */
@@ -56,11 +57,19 @@
                         easing: 'jswing'
                     });
                     $('.single-footer__container').removeClass('expanded');
-                    $('.single-footer__more').text(' / Read More');
+                    if($('body').hasClass('large')) {
+                        $('.single-footer__more').text(' / Read More');
+                    } else {
+                        $('.single-footer__more').text(' / More');
+                    }
                 } else {
                     adjustFooterHeight();
                     $('.single-footer__container').addClass('expanded');
-                    $('.single-footer__more').text(' / Hide Text');
+                    if($('body').hasClass('large')) {
+                        $('.single-footer__more').text(' / Hide Text');
+                    } else {
+                        $('.single-footer__more').text(' / Hide');
+                    }
                 }
             });
         }
@@ -85,17 +94,21 @@
 
         // Hide Images and Fade in the first one
         if (!$.browser.msie) {
-            if ($("#proj_img").length > 0) {
-                //hide all images
-                $("#proj_img img").hide();
-                $('#proj_img .active img').first().fadeIn(400);
-                var caption = $('#proj_img .active img').first().nextAll('.caption').html();
-                var description = $('#proj_img .active img').first().nextAll('.description').html();
-                var imagedate = $('#proj_img .active img').first().nextAll('.date').html();
+            if($('body').hasClass('large')) {
+                if ($("#proj_img").length > 0) {
+                    $("#proj_img img").hide();
+                    $('#proj_img .active img').first().fadeIn(400);
+                }
+            } else {
+                if ($("#proj_img").length > 0) {
+                    var caption = $('#proj_img .active img').first().nextAll('.single-project-caption').html();
+                    var description = $('#proj_img .active img').first().nextAll('.single-project-description').html();
+                    var imagedate = $('#proj_img .active img').first().nextAll('.single-project-date').html();
 
-                $('.single-footer__caption').html(caption);
-                $('.single-footer__caption-date').html(imagedate);
-                $('.single-below-footer__description').html(description);
+                    $('.single-footer__caption').html(caption);
+                    $('.single-footer__caption-date').html(imagedate);
+                    $('.single-below-footer__description').html(description);
+                }
             }
         }
 
@@ -113,9 +126,9 @@
                     $('#proj_img .active img').first().fadeIn(400);
 
                     // reset the footer variables for the active project
-                    var caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
-                    var description = $('#proj_img .active img').first().nextAll('.description').first().html();
-                    var imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
+                    var caption = $('#proj_img .active img').first().nextAll('.single-project-caption').first().html();
+                    var description = $('#proj_img .active img').first().nextAll('.single-project-description').first().html();
+                    var imagedate = $('#proj_img .active img').first().nextAll('.single-project-date').first().html();
 
                     $('.single-footer__caption').html(caption);
                     $('.single-footer__caption-date').html(imagedate);
@@ -276,11 +289,9 @@
             }
             /*  ----- CLICK UP OR DOWN (Next / Prev PROJECT) -------*/
             else if (dir == "u" || dir == "d") {
-                /* TODO: Does this update the caption as well? */
                 var href = thislink.attr("href");
                 History.pushState(null, null, href);
             }
-
             return false;
         }); // close >> #proj_img.project .arrw click
 
@@ -302,31 +313,60 @@
         });
 
         // NOTE: jQuery.touchSwipe.min.js
-        $(".arrw").swipe({
-            //Generic swipe handler for all directions
-            swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
-                console.log("You swiped " + direction);
-                if (direction == "left") {
-                    $('.arrw.right').click();
+        if($('body').hasClass('large')) {
+            $(".arrw").swipe({
+                //Generic swipe handler for all directions
+                swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+                    console.log("You swiped " + direction);
+                    if (direction == "left") {
+                        $('.arrw.right').click();
+                    }
+                    if (direction == "right") {
+                        $('.arrw.left').click();
+                    }
+                    if (direction == "down") {
+                        $('.arrw.up').click();
+                    }
+                    if (direction == "up") {
+                        $('.arrw.down').click();
+                    }
                 }
-                if (direction == "right") {
-                    $('.arrw.left').click();
+            });
+        } else {
+            /*$('.proj').swipe({
+                swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+                    console.log("You swiped " + direction);
+                    if(direction == "left") {
+                        var href = $('.arrw.down').attr('href');
+                        History.pushState(null, null, href);
+                    }
+                    if(direction == "right") {
+                        var href = $('.arrw.up').attr('href');
+                        History.pushState(null, null, href);
+
+                    }
                 }
-                if (direction == "down") {
-                    $('.arrw.up').click();
-                }
-                if (direction == "up") {
-                    $('.arrw.down').click();
-                }
-            }
-        });
+            })*/
+            $('.proj').on("swiperight",function(e) {
+                e.preventDefault();
+                var href = $('.arrw.up').attr('href');
+                History.pushState(null, null, href);
+            }).on("swipeleft", function(e) {
+                e.preventDefault();
+                var href = $('.arrw.down').attr('href');
+                History.pushState(null, null, href);
+            });
+        }
+
+        getPrevAndNextButtons($(".proj.active"));
+        loadPrevAndNextProject($(".proj.active"));
 
     }); // close >> document(ready)
 
-    $(window).load(function() {
+    /*$(window).load(function() {
         getPrevAndNextButtons($(".proj.active"));
         loadPrevAndNextProject($(".proj.active"));
-    });
+    });*/
 
 
     /* Resize Site */
@@ -351,10 +391,18 @@
             $('.arrw').hide();
             $('#proj_img img').each(function() {
                 $(this).removeClass('slide').addClass('single_project_image');
-                $(this).hide();
+                //$(this).hide();
+                $(this).css('width', ww + 'px').css('height', '').css('display', '');
             });
-            $('.proj.active img').each(function() {
-                $(this).css('width', '100%').css('display', 'block').css('height', '').show();
+            /*$('.proj.active img').each(function() {
+                $(this).css('display', 'block').show();
+            });*/
+            $('.proj_wrapper').each(function() {
+                $(this).css('width', ww + 'px');
+            });
+        } else if ($('body').hasClass('large')) {
+            $('#proj_img img').each(function() {
+                $(this).removeClass('single_project_image').addClass('slide');
             });
         }
 
@@ -487,7 +535,6 @@
         }
 
         if (el.hasClass('full')) {
-            console.log('resizing');
             if (cR > iR) {
                 iw = cw;
                 ih = iw / iR;
@@ -555,7 +602,8 @@
     }
     /* End: adjustFooterHeight */
 
-    /* Get Current Page URL */
+    /* Get Current Page URL. If the new href state is
+     * different then go to different project */
     function getPage(href, push) {
         if (href[0] != "/") {
             href = "/" + href;
@@ -582,7 +630,11 @@
         var dir;
         var thisSlideShow = $('#proj_img');
         var thisProj = $(".proj.active");
-        var current = $(".proj.active .slide:visible");
+        if($('body').hasClass('large')) {
+            var current = $(".proj.active .slide:visible");
+        } else {
+            var current = $(".proj.active");
+        }
 
         nextProj = $("#p_" + slug);
         if (nextProj.index() > thisProj.index()) {
@@ -598,7 +650,8 @@
                 dir = "u";
             }
         }
-        if (nextProj.html() === "") {
+
+        if (nextProj.find('.proj_wrapper').first().html() === "") {
             getNewProject(thisProj, current, nextProj, dir, true);
         } else {
             slideToProject(thisProj, current, nextProj, dir);
@@ -666,68 +719,106 @@
         var currentLeft, slideToShow, currentTop, directory, imgDim, table, newLeft;
         var caption, description, imagedate;
 
-        currentLeft = current.offset().left;
-        slideToShow = nextProj.find(".slide:first-child");
+        var ww = $(window).width();
 
-        imgDim = imgResize(slideToShow, ww, iah, "array", 0, 0, 0, 0);
+        if($('body').hasClass('large')) {
+            currentLeft = current.offset().left;
+            slideToShow = nextProj.find(".slide:first-child");
 
-        currentTop = current.offset().top;
+            imgDim = imgResize(slideToShow, ww, iah, "array", 0, 0, 0, 0);
 
-        /* TODO: REMOVE
-        table = nextProj.parent().data("t");
-        if (table == "projects") {
-            directory = "project";
-        } */
+            currentTop = current.offset().top;
 
-        /* If the footer is epanded, shrink it */
-        if ($('.single-footer__container').hasClass('expanded')) {
-            $('.single-expand').click();
-        }
+            /* If the footer is epanded, shrink it */
+            if ($('.single-footer__container').hasClass('expanded')) {
+                $('.single-expand').click();
+            }
 
-        if (dir == "u") {
-            current.stop().animate({
-                top: currentTop + wh + gutter
-            }, {
-                duraction: speed - 100,
-                easing: easing
-            }).hide().css("top", currentTop + "px");
+            if (dir == "u") {
+                current.stop().animate({
+                    top: currentTop + wh + gutter
+                }, {
+                    duration: speed - 100,
+                    easing: easing
+                }).hide().css("top", currentTop + "px");
 
-            slideToShow.css("top", (imgDim[3] - wh - gutter) + "px").show(0).stop().animate({
-                top: imgDim[3]
-            }, {
-                duration: speed,
-                easing: easing
-            });
+                slideToShow.css("top", (imgDim[3] - wh - gutter) + "px").show(0).stop().animate({
+                    top: imgDim[3]
+                }, {
+                    duration: speed,
+                    easing: easing
+                });
 
-            newLeft = ($(".proj.active .slide").length - 1) * 13;
+                newLeft = ($(".proj.active .slide").length - 1) * 13;
+            } else {
+                current.stop().animate({
+                    top: (currentTop - wh)
+                }, {
+                    duration: speed - 100,
+                    easing: easing
+                }).hide(0).css("top", currentTop + "px");
+                slideToShow.css("top", (ww + imgDim[3]) + "px").show(0).stop().animate({
+                    top: imgDim[3]
+                }, {
+                    duration: speed,
+                    easing: easing
+                });
+            }
         } else {
-            current.stop().animate({
-                top: (currentTop - wh)
-            }, {
-                duration: speed - 100,
-                easing: easing
-            }).hide(0).css("top", currentTop + "px");
-            slideToShow.css("top", (ww + imgDim[3]) + "px").show(0).stop().animate({
-                top: imgDim[3]
-            }, {
-                duration: speed,
-                easing: easing
-            });
+            // On mobile device so slide is left and right
+
+            slideToShow = nextProj;
+
+            /* If the footer is epanded, shrink it */
+            if ($('.single-footer__container').hasClass('expanded')) {
+                $('.single-expand').click();
+            }
+
+            if (dir == "u") {
+                current.stop().animate({
+                    left: ww
+                }, {
+                    duration: 500,
+                    easing: easing
+                }).hide().css("left", "0px");
+
+                slideToShow.css("left", "-" + ww + "px").show(0).stop().animate({
+                    left: 0
+                }, {
+                    duration: 500,
+                    easing: easing
+                });
+
+            } else {
+                current.stop().animate({
+                    left: -ww
+                }, {
+                    duration: 500,
+                    easing: easing
+                }).hide(0).css("left", "0px");
+
+                slideToShow.css("left", ww + "px").show(0).stop().animate({
+                    left: 0
+                }, {
+                    duration: 500,
+                    easing: easing
+                });
+            }
         }
 
         thisProj.removeClass("active");
-        thisProj.find('.caption').addClass('inactive');
-        thisProj.find('.description').addClass('inactive');
-        thisProj.find('.date').addClass('inactive');
+        thisProj.find('.single-project-caption').addClass('inactive');
+        thisProj.find('.single-project-description').addClass('inactive');
+        thisProj.find('.single-project-date').addClass('inactive');
 
         nextProj.addClass("active");
-        nextProj.find('.caption').removeClass('inactive');
-        nextProj.find('.description').removeClass('inactive');
-        nextProj.find('.date').removeClass('inactive');
+        nextProj.find('.single-project-caption').removeClass('inactive');
+        nextProj.find('.single-project-description').removeClass('inactive');
+        nextProj.find('.single-project-date').removeClass('inactive');
 
-        caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
-        description = $('#proj_img .active img').first().nextAll('.description').first().html();
-        imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
+        caption = $('#proj_img .active img').first().nextAll('.single-project-caption').first().html();
+        description = $('#proj_img .active img').first().nextAll('.single-project-description').first().html();
+        imagedate = $('#proj_img .active img').first().nextAll('.single-project-date').first().html();
 
         $('.single-footer__caption').html(caption);
         $('.single-footer__caption-date').html(imagedate);

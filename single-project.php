@@ -87,6 +87,7 @@
       }
 
       echo '<div id="p_'.$post->post_name.'" class="proj'.$activeFlag.'" data-id="'.$proj_id.'" data-title="'.get_the_title().'">';
+      echo '<div class="proj_wrapper">';
 
             if (array_key_exists('swl_video', $proj_meta)) {
                 $hasVideo = true;
@@ -124,16 +125,16 @@
               }
           }
           ?>
-				<span class="date"><?php echo $proj_date;
+				<span class="single-project-date"><?php echo $proj_date;
           ?></span>
-				<span class="caption"><?php echo $the_project_title;
+				<span class="single-project-caption"><?php echo $the_project_title;
           ?></span>
-				<span class="description"><?php echo $the_project_description;
+				<span class="single-project-description"><?php echo $the_project_description;
           ?></span>
 			<?php
 
       }
-      echo '</div>';
+      echo '</div></div>';
 
     endwhile;
     // Individual Post Styling ?>

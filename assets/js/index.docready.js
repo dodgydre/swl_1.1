@@ -484,7 +484,6 @@
                     // portrait image
                     width = iR * pw;
                     imgleft = (pw - width) / 2;
-                    imgleft = 0;
                     thisImg
                         .height(pw)
                         .width('auto')
@@ -492,7 +491,8 @@
                         .css('top', '0px');
                     thisText
                         .css('top', (pw + 5) + 'px')
-                        .css('left', imgleft + 'px');
+                        //.css('left', imgleft + 'px');
+                        .css('left', 0 + 'px');
                 } else {
                     // landscape image
                     height = pw / iR;

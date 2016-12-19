@@ -43,6 +43,7 @@ elixir(function(mix) {
         './assets/js/navigation.js',
         './assets/js/history.js',
         './assets/js/jQuery.imagesLoaded.min.js',
+        './assets/js/jquery.mobile.custom.js',
     ], './js/plugins.min.js');
     mix.scripts([
         './assets/js/swl_ajax_get_posts.js',

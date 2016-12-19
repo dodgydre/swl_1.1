@@ -28,9 +28,12 @@
             $('#proj_img_container').addClass('large').removeClass('mobile');
             $('#proj_img img').addClass('slide');
         } else {
+            headerheight = 45;
+            iah = wh-footerheight-headerheight;
             $('body').removeClass('large').addClass('mobile');
             $('#proj_img').removeClass('large').addClass('mobile');
             $('#proj_img_container').removeClass('large').addClass('mobile');
+            $('#proj_img_container').height(iah);
             $('#proj_img img').removeClass('slide');
             $('.single-footer__more').text(' / More');
             $('.arrw').hide();
@@ -116,6 +119,8 @@
         $(window).resize(function() {
             if ($(window).width() > 769) {
                 if ($('.mobile').length > 0) {
+                    headerheight = 105;
+                    iah = $(window).height() - headerheight - footerheight;
                     $('body').addClass('large').removeClass('mobile');
                     $('#proj_img').addClass('large').removeClass('mobile');
                     $('#proj_img_container').addClass('large').removeClass('mobile');
@@ -138,10 +143,13 @@
                     $('.arrw').show();
                 }
             } else {
+                headerheight = 45;
+                iah = $(window).height() - headerheight - footerheight;
+
                 $('body').removeClass('large').addClass('mobile');
                 $('#proj_img').removeClass('large').addClass('mobile');
                 $('#proj_img_container').removeClass('large').addClass('mobile');
-
+                $('#proj_img_container').height(iah);
                 // take away the arrows when we go small.
                 $('.arrw').hide();
             }
@@ -150,8 +158,11 @@
 
         // Project Table Sorting?
 
-        // Project Slider
+        // Project Slider (1)
         $("#proj_img.project .arrw").click(function() {
+
+            console.log('arrow clicked');
+
             var dir, thislink;
             var thisSlideShow, slideToShow, thisProject, current;
             var imgDim, currentLeft, nextCurrentLeft, nextNextLeft, caption, imagedate, description;
@@ -207,7 +218,7 @@
                         imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
                         currentLeft = current.offset().left;
                         nextCurrentLeft = currentLeft + cw + gutter;
-                        nextNextLeft = ($imgDim[2] - cw - gutter);
+                        nextNextLeft = (imgDim[2] - cw - gutter);
 
                         current.stop().animate({
                             left: nextCurrentLeft
@@ -239,6 +250,7 @@
 
             /*  ----- CLICK RIGHT (Next Slide) -------*/
             else if (dir == "r") {
+                console.log('direction = right');
                 if (thisProject.find(".slide").length > 1) {
                     if (current.nextAll(".proj.active .slide").first().length > 0) {
                         // If we're not on the last slide, move one forward
@@ -257,11 +269,13 @@
                         current.fadeOut(fadeOutSpeed);
                         slideToShow.fadeIn(fadeInSpeed);
                     } else if (thisSlideShow.hasClass("sliding")) {
+                        console.log(slideToShow);
+                        console.log("cw, ch: " + cw + ', ' + ch);
 
                         imgDim = imgResize(slideToShow, cw, ch, "array", 0, 0, 0, 0);
                         currentLeft = current.offset().left;
                         nextCurrentLeft = -(ww + gutter);
-                        nextNextLeft = ($imgDim[2] + ww + gutter);
+                        nextNextLeft = (imgDim[2] + ww + gutter);
                         current.stop().animate({
                             left: nextCurrentLeft
                         }, {
@@ -332,26 +346,15 @@
                     }
                 }
             });
-        } else {
-            /*$('.proj').swipe({
-                swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
-                    console.log("You swiped " + direction);
-                    if(direction == "left") {
-                        var href = $('.arrw.down').attr('href');
-                        History.pushState(null, null, href);
-                    }
-                    if(direction == "right") {
-                        var href = $('.arrw.up').attr('href');
-                        History.pushState(null, null, href);
-
-                    }
-                }
-            })*/
+        } else /* body doesn't have class large */ {
             $('.proj').on("swiperight",function(e) {
+                console.log('swiped right');
                 e.preventDefault();
                 var href = $('.arrw.up').attr('href');
                 History.pushState(null, null, href);
             }).on("swipeleft", function(e) {
+                console.log('swiped left');
+
                 e.preventDefault();
                 var href = $('.arrw.down').attr('href');
                 History.pushState(null, null, href);
@@ -373,6 +376,12 @@
     function resizeSite() {
         ww = $(window).width();
         wh = $(window).height();
+        if($('body').hasClass('mobile')) {
+            headerheight = 45;
+        } else {
+            headerheight = 105;
+        }
+
         iah = wh - headerheight - footerheight;
         siteratio = ww / iah;
 
@@ -398,7 +407,7 @@
                 $(this).css('display', 'block').show();
             });*/
             $('.proj_wrapper').each(function() {
-                $(this).css('width', ww + 'px');
+                $(this).css('width', ww + 'px').height($(window).height() - 90);
             });
         } else if ($('body').hasClass('large')) {
             $('#proj_img img').each(function() {
@@ -673,7 +682,7 @@
             dataType: 'json',
             success: function(result) {
                 jQuery.each(result, function(index, value) {
-                    nextProj.append(value);
+                    nextProj.find('.proj_wrapper').first().append(value);
                 });
                 resizeSite();
 
@@ -778,14 +787,15 @@
                 current.stop().animate({
                     left: ww
                 }, {
-                    duration: 500,
+                    duration: 50,
                     easing: easing
                 }).hide().css("left", "0px");
 
+                //slideToShow.css('height',$(window).height() - 90);
                 slideToShow.css("left", "-" + ww + "px").show(0).stop().animate({
                     left: 0
                 }, {
-                    duration: 500,
+                    duration: 300,
                     easing: easing
                 });
 
@@ -793,14 +803,15 @@
                 current.stop().animate({
                     left: -ww
                 }, {
-                    duration: 500,
+                    duration: 50,
                     easing: easing
                 }).hide(0).css("left", "0px");
 
+                //slideToShow.css('height',$(window).height() - 90);
                 slideToShow.css("left", ww + "px").show(0).stop().animate({
                     left: 0
                 }, {
-                    duration: 500,
+                    duration: 300,
                     easing: easing
                 });
             }

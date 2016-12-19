@@ -247,14 +247,16 @@
   }
 
   .single-footer__caption-date {
-    float: left;
-    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-size: smaller;
-    font-weight: 400;
-    width: 3em;
+    display: none;
+    //float: left;
+    //font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    //font-size: smaller;
+    //font-weight: 400;
+    //width: 3em;
   }
 
   .single-footer__caption {
+    display: inline-block;
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: smaller;
@@ -263,7 +265,7 @@
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
-    width: 10em;
+    width: 14em;
   }
 
   .single-footer__more {
@@ -279,7 +281,6 @@
     display: none;
   }
 }
-
 
 @media (min-width: 769px) {
   .single-footer__wrapper {
@@ -422,7 +423,6 @@
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //  0X - Pop-out Menu
 ///////////////////////////////////////////////////////////////////////
@@ -433,6 +433,14 @@
   }
 }
 
+@media (max-width: 768px) {
+  .page-template {
+    .single-footer__container,
+    .single-below-footer__container {
+      display: none;
+    }
+  }
+}
 
 @media (min-width: 769px) {
   // Hide the mobile one

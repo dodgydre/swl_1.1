@@ -98,6 +98,9 @@
                 return false;
             }
             // archive-project in mobile mode
+            else if( $('body').hasClass('post-type-archive-people')) {
+                
+            }
             else if ($('body').hasClass('mobile')) {
                 e.preventDefault();
                 //$('.header__icon').toggleClass('is-active');

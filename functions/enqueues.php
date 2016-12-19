@@ -59,11 +59,10 @@ function swl_scripts()
             '3.0.1',
             true
         );
-
         wp_enqueue_script('index.docready', get_stylesheet_directory_uri().'/js/index.docready.min.js', array('jquery'), false, true);
-    } elseif (basename($template) == 'practice-profile.php' || basename($template) == 'practice-jobs.php' || basename($template) == 'practice-people.php') {
+    } elseif (basename($template) == 'practice-profile.php' ||
+              basename($template) == 'practice-jobs.php') {
         wp_enqueue_script('plugins', get_stylesheet_directory_uri().'/js/plugins.min.js', array('jquery'), false, true);
-        //wp_enqueue_script( 'jquery.easing', get_stylesheet_directory_uri() . '/js/jquery.easing.1.3.js', $deps = array('jquery'), $ver = false, $in_footer = true );
         wp_enqueue_script('about.docready', get_stylesheet_directory_uri().'/js/about.docready.min.js', array('jquery'), false, true);
     } elseif (basename($template) == 'contact.php') {
         wp_enqueue_script('google.map.api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCnExCTheTiUfwaafSgnHsCcLxvhlAdgy4', array(), false, true);

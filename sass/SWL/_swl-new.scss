@@ -65,6 +65,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .proj_img_container {
+    overflow-y: scroll;
+  }
+}
+
 .project_image {
   height: auto;
   max-width: 100%;

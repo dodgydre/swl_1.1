@@ -5,6 +5,7 @@
 <?php if (have_posts()) : ?>
 
 	<?php
+  $current_proj_id = '';
   while (have_posts()) : the_post();
     // get images from current post.  Also get title, text, etc. ?
     ?>
@@ -60,7 +61,7 @@
         $the_project_description .= '<br />'.$the_project_content;
 
         if (rwmb_meta('swl_info_download')) {
-            $the_project_description .= '<br />Download more details:';
+            $the_project_description .= '<br /><br />Download more details:';
             $swl_info_download_link = rwmb_meta('swl_info_download');
             foreach ($swl_info_download_link as $file) {
                 $the_project_description .= "&nbsp;&nbsp;<a href='".$file['url']."' title='".$file['name']."'>".$file['title'].'</a><br />';
@@ -84,6 +85,7 @@
           $activeProjId = $proj_id;
           $activeFlag = ' active';
           $activePassed = true;
+          $current_proj_id = $proj_id;
       }
 
       echo '<div id="p_'.$post->post_name.'" class="proj'.$activeFlag.'" data-id="'.$proj_id.'" data-title="'.get_the_title().'">';
@@ -92,6 +94,7 @@
             if (array_key_exists('swl_video', $proj_meta)) {
                 $hasVideo = true;
                 $video = $proj_meta['swl_video'][0];
+                $video = add_query_arg( array( 'api' => '1' ), $video );
                 if (array_key_exists('swl_video_position', $proj_meta)) {
                     $video_place = $proj_meta['swl_video_position'][0];
                 } else {
@@ -119,7 +122,7 @@
               if ($hasVideo) {
                   if ($video_place == $counter) {
                       echo "<div class='slide video' data-f='100' data-r='1.777'>";
-                      echo wp_oembed_get($video, array('data-f' => 100, 'data-r' => 1.777, 'class' => 'slide video'));
+                      echo wp_oembed_get($video, array('data-f' => 100, 'data-r' => 1.777, 'class' => 'slide video', 'id' => 'video_' . $proj_id));
                       echo '</div>';
                   }
               }
@@ -129,8 +132,8 @@
           ?></span>
 				<span class="single-project-caption"><?php echo $the_project_title;
           ?></span>
-				<span class="single-project-description"><?php echo $the_project_description;
-          ?></span>
+				<div class="single-project-description"><?php echo $the_project_description;
+          ?></div>
 			<?php
 
       }
@@ -157,7 +160,15 @@
 
 <?php endif; ?>
 
-</div>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<?php if($hasVideo) : ?>
+  <script>
+      var proj_id = jQuery(".proj.active").attr("data-id")
+      var iframe = jQuery(".proj.active").find("iframe");
+      var player_<?php echo $current_proj_id; ?> = new Vimeo.Player(iframe);
+  </script>
+  </div>
+<?php endif; ?>
 <!-- End: proj_img_container -->
 
 <!-- Start: Footer -->
@@ -166,7 +177,7 @@
 		<a class="single-expand">
 			<span class="single-footer__caption-date"><?php echo $proj_date; ?></span>
 			<span class="single-footer__caption"><?php echo $the_project_title; ?></span>
-			<span class="single-footer__more">/ Read More</span>
+			<span class="single-footer__more">/ Read text</span>
 		</a>
 	</div>
 </div>
@@ -175,7 +186,7 @@
 <!-- Start: Below Footer -->
 <div class="single-below-footer__container">
 	<div class="single-below-footer__wrapper">
-		<span class="single-below-footer__description"></span>
+		<div class="single-below-footer__description"></div>
 	</div>
 </div>
 <!-- End: Below Footer -->

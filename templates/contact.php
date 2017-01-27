@@ -17,7 +17,7 @@
 
             <?php echo the_content(); ?>
 
-            <a href="https://www.instagram.com/structure.workshop/"><img src="<?php echo get_template_directory_uri(); ?>/images/inst.png" alt="SWL on Instagram" width="25px" height="25px"/></a>
+            <a href="https://www.instagram.com/structure.workshop/" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/images/inst.png" alt="SWL on Instagram" width="25px" height="25px"/></a>
         </div>
 
         <div class="contact-left">

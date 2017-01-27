@@ -49,15 +49,15 @@
     position: relative;
     width: 100%;
   }
+
+  .proj.active .slide:first-child {
+    display: block;
+  }
 }
 
 .proj.active img {
   //max-height: 100%;
   //max-width: 100%;
-  display: block;
-}
-
-#proj_img .proj.active .slide:first-child {
   display: block;
 }
 
@@ -115,8 +115,8 @@
     display: inline-block;
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-size: medium;
-    font-weight: 400;
+    font-size: small;
+    font-weight: 300;
     margin: 20px;
     max-width: calc(100% - 150px);
     overflow: hidden;
@@ -131,6 +131,7 @@
     clear: left;
     display: block;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: small;
     font-weight: 300;
     height: 0;
     line-height: 1.35em;
@@ -207,7 +208,9 @@
 
   .projtext {
     //display: none;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Georgia', 'Arial', sans-serif;
     font-size: smaller;
+    font-stretch: expanded;
     font-weight: 300;
     overflow: hidden;
     position: absolute;
@@ -258,7 +261,10 @@
 
   .projtext {
     display: none;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Georgia', 'Arial', sans-serif;
     font-size: small;
+    font-stretch: expanded;
+    font-weight: 300;
     position: absolute;
     width: 270px;
   }
@@ -307,6 +313,7 @@
 
 .contact-right {
   float: right;
+  margin-top: -1em;
   padding: 30px 30px 0 0;
   width: 50%;
 }

@@ -19,9 +19,10 @@ add_action('wp_ajax_ajax_get_project_imgs', 'ajax_get_project_imgs');
 function ajax_get_project_imgs()
 {
     $i = 0;
+    $post = get_post($_POST['project_id']);
     $images = get_post_meta($_POST['project_id'], $key = 'swl_image', $single = false);
     $the_project_title = get_post_field('post_title', $_POST['project_id']);
-    $the_project_content = get_post_field('post_content', $_POST['project_id']);
+    $the_project_content = apply_filters('the_content', $post->post_content);
 
     $proj_meta = get_post_meta($_POST['project_id']);
     $the_project_description = '';
@@ -79,7 +80,7 @@ function ajax_get_project_imgs()
 
     /* Is there a PDF or similar to download? */
     if (rwmb_meta('swl_info_download', [], $_POST['project_id'])) {
-        $the_project_description .= '<br />Download more details:';
+        $the_project_description .= '<br /><br />Download more details:';
         $swl_info_download_link = rwmb_meta('swl_info_download');
         if (is_array($swl_info_download_link) || is_object($swl_info_download_link)) {
             foreach ($swl_info_download_link as $file) {
@@ -108,6 +109,14 @@ function ajax_get_project_imgs()
     }
 
     $imgs[$i] = '<span class="single-project-date inactive">'.$proj_date.'</span><span class="single-project-caption inactive">'.$the_project_title.'</span><span class="single-project-description inactive">'.$the_project_description.'</span>';
+    $i++;
+    if($hasVideo) {
+      $imgs[$i] = '<script>
+          var iframe = jQuery("[data-id=' . $_POST['project_id'] . ']").find("iframe").first();
+          player_' . $_POST['project_id'] . ' = new Vimeo.Player(iframe);
+          </script>';
+    }
+
 
     echo json_encode($imgs);
 

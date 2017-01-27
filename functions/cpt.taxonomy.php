@@ -187,26 +187,89 @@ function swl_projects_meta_boxes($meta_boxes)
         $proj_date_years[$i] = $i;
     }
 
-    // People Page Images
+    $proj_date_months = [
+      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+
+    // Fullsize image box for CV page
     $meta_boxes[] = array(
-        'title' => __('CV or other files', 'textdomain'),
+        'title' => __('Full size image?', 'textdomain'),
         'post_types' => 'people',
         'fields' => array(
-            array(
-                'name' => 'CV or other info Download',
-                'id' => 'swl_cv_download',
-                'type' => 'file',
-                'force_delete' => false,
-                'max_file_uploads' => 2,
-            ),
-            array(
-                'name' => 'Fullsize',
-                'id' => 'swl_people_fullsize',
-                'type' => 'checkbox',
-                'desc' => 'Check for full screen',
-            ),
+          array(
+            'name' => 'Fullsize',
+            'id' => 'swl_people_fullsize',
+            'type' => 'checkbox',
+            'desc' => 'Check for full screen',
+          ),
         ),
     );
+
+    // Current Team Members - Name, Acronyms, CV
+    $meta_boxes[] = array(
+        'title' => __('Current Team Members', 'textdomain'),
+        'post_types' => 'people',
+        'fields' => array(
+          array(
+            'id' => 'swl_current_team',
+            'type'=> 'group',
+            'clone' => true,
+            'sort_clones' => true,
+            'fields' => array(
+              array(
+                  'name' => 'Name',
+                  'id' => 'swl_team_member_name',
+                  'type' => 'text',
+                  'columns' => 3,
+              ),
+              array(
+                  'name' => 'Acronyms',
+                  'id' => 'swl_team_member_acronyms',
+                  'type' => 'text',
+                  'columns' => 3,
+              ),
+              array(
+                  'name' => 'CV or other info Download',
+                  'id' => 'swl_team_member_cv',
+                  'type' => 'file_advanced',
+                  'force_delete' => false,
+                  'max_file_uploads' => 1,
+                  'columns' => 6,
+              ),
+            ),
+          ),
+        ),
+    );
+
+    // Past Team Members - Only Name and Acronyms
+    $meta_boxes[] = array(
+        'title' => __('Past Team Members', 'textdomain'),
+        'post_types' => 'people',
+        'fields' => array(
+          array(
+            'id' => 'swl_past_team',
+            'type'=> 'group',
+            'clone' => true,
+            'sort_clones' => true,
+            'fields' => array(
+              array(
+                  'name' => 'Name',
+                  'id' => 'swl_team_member_name',
+                  'type' => 'text',
+                  'columns' => 6,
+              ),
+              array(
+                  'name' => 'Acronyms',
+                  'id' => 'swl_team_member_acronyms',
+                  'type' => 'text',
+                  'columns' => 6,
+              ),
+            ),
+          ),
+        ),
+    );
+
 
     // Front Page Images
     $meta_boxes[] = array(
@@ -220,7 +283,13 @@ function swl_projects_meta_boxes($meta_boxes)
                 'max_file_uploads' => 1,
             ),
             array(
-                'name' => 'Date',
+                'name' => 'Date (Month)',
+                'id' => 'fp_image_month',
+                'type' => 'select',
+                'options' => $proj_date_months,
+            ),
+            array(
+                'name' => 'Date (Year)',
                 'id' => 'fp_image_date',
                 'type' => 'select',
                 'options' => $proj_date_years,

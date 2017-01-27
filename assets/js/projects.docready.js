@@ -38,7 +38,7 @@
             $('#proj_img_container').removeClass('large').addClass('mobile');
             $('#proj_img_container').height(iah);
             $('#proj_img img').removeClass('slide');
-            $('.single-footer__more').text(' / More');
+            $('.single-footer__more').text(' / Read text');
             $('.arrw').hide();
         }
 
@@ -64,17 +64,17 @@
                     });
                     $('.single-footer__container').removeClass('expanded');
                     if($('body').hasClass('large')) {
-                        $('.single-footer__more').text(' / Read More');
+                        $('.single-footer__more').text(' / Read text');
                     } else {
-                        $('.single-footer__more').text(' / More');
+                        $('.single-footer__more').text(' / Read text');
                     }
                 } else {
                     adjustFooterHeight();
                     $('.single-footer__container').addClass('expanded');
                     if($('body').hasClass('large')) {
-                        $('.single-footer__more').text(' / Hide Text');
+                        $('.single-footer__more').text(' / Hide text');
                     } else {
-                        $('.single-footer__more').text(' / Hide');
+                        $('.single-footer__more').text(' / Hide text');
                     }
                 }
             });
@@ -100,27 +100,29 @@
 
         // Hide Images and Fade in the first one
         if (!$.browser.msie) {
-            if($('body').hasClass('large')) {
-                if ($("#proj_img").length > 0) {
-                    $("#proj_img img").hide();
-                    $('#proj_img .active img').first().fadeIn(400);
-                }
-            } else {
-                if ($("#proj_img").length > 0) {
-                    var caption = $('#proj_img .active img').first().nextAll('.single-project-caption').html();
-                    var description = $('#proj_img .active img').first().nextAll('.single-project-description').html();
-                    var imagedate = $('#proj_img .active img').first().nextAll('.single-project-date').html();
+            if($("#proj_img").length > 0 ) {
+              if($('body').hasClass('large')) {
+                  if ($("#proj_img").length > 0) {
+                      $("#proj_img img").hide();
+                      $('#proj_img .active img').first().fadeIn(400);
+                  }
+              }
+              var caption = $('#proj_img .active img').first().nextAll('.single-project-caption').html();
+              var description = $('#proj_img .active img').first().nextAll('.single-project-description').html();
+              var imagedate = $('#proj_img .active img').first().nextAll('.single-project-date').html();
 
-                    $('.single-footer__caption').html(caption);
-                    $('.single-footer__caption-date').html(imagedate);
-                    $('.single-below-footer__description').html(description);
-                }
+              $('.single-footer__caption').html(caption);
+              $('.single-footer__caption-date').html(imagedate);
+              $('.single-below-footer__description').html(description);
             }
         }
 
         /* -------  On resizing, check the screen size again --------- */
         $(window).resize(function() {
+            console.log('resized');
+            console.log($(window).width());
             if ($(window).width() > 769) {
+                // If it was previously a mobile site but is now a large site:
                 if ($('.mobile').length > 0) {
                     headerheight = 105;
                     iah = $(window).height() - headerheight - footerheight;
@@ -144,8 +146,50 @@
 
                     // Bring back the arrows if we go big again.
                     $('.arrw').show();
+
+                    // Use Keyboard instead of Mouse
+                    $(document).keydown(function(e) {
+                        if (e.which == 37 && !e.metaKey) {
+                            e.preventDefault();
+                            $(".arrw.left").click();
+                        } else if (e.which == 38 && !e.metaKey) {
+                            e.preventDefault();
+                            $(".arrw.up").click();
+                        } else if (e.which == 39 && !e.metaKey) {
+                            e.preventDefault();
+                            $(".arrw.right").click();
+                        } else if (e.which == 40 && !e.metaKey) {
+                            e.preventDefault();
+                            $(".arrw.down").click();
+                        }
+                    });
+
+                    $(".arrw").swipe({
+                        //Generic swipe handler for all directions
+                        swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+                            console.log("You swiped " + direction);
+                            if (direction == "left") {
+                                $('.arrw.right').click();
+                            }
+                            if (direction == "right") {
+                                $('.arrw.left').click();
+                            }
+                            if (direction == "down") {
+                                $('.arrw.up').click();
+                            }
+                            if (direction == "up") {
+                                $('.arrw.down').click();
+                            }
+                        }
+                    });
+
+                    $('.proj').unbind("swipe");
                 }
             } else {
+              // If it becomes a small site but was previously a large one unbind the arrws
+              if ($('.large').length > 0) {
+
+
                 headerheight = 45;
                 iah = $(window).height() - headerheight - footerheight;
 
@@ -155,6 +199,24 @@
                 $('#proj_img_container').height(iah);
                 // take away the arrows when we go small.
                 $('.arrw').hide();
+
+                $('.proj').swipe({
+                  swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+                    if (direction == 'left') {
+                      event.preventDefault();
+                      var href = $('.arrw.down').attr('href');
+                      History.pushState(null, null, href);
+                    }
+                    if (direction == 'right') {
+                      event.preventDefault();
+                      var href = $('.arrw.up').attr('href');
+                      History.pushState(null, null, href);
+                    }
+                  }
+                });
+
+                $('.arrw').unbind("swipe");
+              }
             }
             resizeSite();
         });
@@ -196,6 +258,12 @@
             var current = $(".proj.active .slide:visible");
             var imgDim, slideToShow, currentLeft, nextCurrentLeft, nextNextLeft;
             var captionText;
+
+            // If the current slide is a video - make sure we stop the video before moving on.
+            if( current.hasClass('video') ) {
+              var pause_string = 'player_' + thisProject.attr('data-id') + '.pause()';
+              eval(pause_string);
+            }
 
             /*  ----- CLICK LEFT (Prev Slide) -------*/
             if (dir == "l") {
@@ -312,25 +380,27 @@
             return false;
         }); // close >> #proj_img.project .arrw click
 
-        // Use Keyboard instead of Mouse
-        $(document).keydown(function(e) {
-            if (e.which == 37 && !e.metaKey) {
-                e.preventDefault();
-                $(".arrw.left").click();
-            } else if (e.which == 38 && !e.metaKey) {
-                e.preventDefault();
-                $(".arrw.up").click();
-            } else if (e.which == 39 && !e.metaKey) {
-                e.preventDefault();
-                $(".arrw.right").click();
-            } else if (e.which == 40 && !e.metaKey) {
-                e.preventDefault();
-                $(".arrw.down").click();
-            }
-        });
+
 
         // NOTE: jQuery.touchSwipe.min.js
         if($('body').hasClass('large')) {
+          // Use Keyboard instead of Mouse
+          $(document).keydown(function(e) {
+              if (e.which == 37 && !e.metaKey) {
+                  e.preventDefault();
+                  $(".arrw.left").click();
+              } else if (e.which == 38 && !e.metaKey) {
+                  e.preventDefault();
+                  $(".arrw.up").click();
+              } else if (e.which == 39 && !e.metaKey) {
+                  e.preventDefault();
+                  $(".arrw.right").click();
+              } else if (e.which == 40 && !e.metaKey) {
+                  e.preventDefault();
+                  $(".arrw.down").click();
+              }
+          });
+
             $(".arrw").swipe({
                 //Generic swipe handler for all directions
                 swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
@@ -349,18 +419,26 @@
                     }
                 }
             });
-        } else /* body doesn't have class large */ {
-            $('.proj').on("swiperight",function(e) {
-                console.log('swiped right');
-                e.preventDefault();
-                var href = $('.arrw.up').attr('href');
-                History.pushState(null, null, href);
-            }).on("swipeleft", function(e) {
-                console.log('swiped left');
-
-                e.preventDefault();
-                var href = $('.arrw.down').attr('href');
-                History.pushState(null, null, href);
+        }
+        else /* body doesn't have class large */ {
+            $('.proj').swipe({
+              swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+                console.log('swipe');
+                console.log(event);
+                console.log(direction);
+                console.log(distance);
+                console.log(duration);
+                if (direction == 'left') {
+                  //event.preventDefault();
+                  var href = $('.arrw.down').attr('href');
+                  History.pushState(null, null, href);
+                }
+                if (direction == 'right') {
+                  //event.preventDefault();
+                  var href = $('.arrw.up').attr('href');
+                  History.pushState(null, null, href);
+                }
+              }
             });
         }
 
@@ -461,15 +539,16 @@
         //end resize each picture
 
         var currentSlide = $(".slideshow .slide:visible");
+        // If there is a video, remove the down arrow so you can control the video.  Otherwise show both up and down arrows
         if (currentSlide.length > 0 && currentSlide.hasClass("video")) {
             if ($(".arrw.down").length > 0) {
-                $(".arrw.left, .arrw.right").height(iah / 2).width((ww / 2) - (ww / 10));
+                $(".arrw.left, .arrw.right").height(iah / 2).width((ww / 2));
                 $(".arrw.down").hide();
             } else {
-                $(".arrw.left, .arrw.right").height(iah / 1.5).width((ww / 2) - (ww / 10));
+                $(".arrw.left, .arrw.right").height(iah / 1.5).width((ww / 2));
             }
         } else {
-            $(".arrw.left, .arrw.right").height(iah - iah / 4).width((ww / 2) - (ww / 10));
+            $(".arrw.left, .arrw.right").height(iah - iah / 4).width((ww / 2));
             $(".arrw.down").show();
         }
     }
@@ -589,9 +668,13 @@
         if (bfh < 33) bfh = 0;
 
         if(bfh > (ch - 150)) {
+            console.log('1');
             bfh = ch - 150;
-            $(".single-below-footer__description").height(bfh).css('overflow-y', 'scroll');
-            $(".single-below-footer__container").css('overflow-y', 'scroll');
+            // below footer inner height (subtract the margins)
+            let bfih = bfh - 40;
+            $(".single-below-footer__description").height(bfih).css('overflow-y', 'scroll');
+            
+            $(".single-below-footer__container");
         }
 
         $('.single-footer__container')
@@ -611,6 +694,8 @@
                 easing: 'jswing'
             });
         $(".single-below-footer__container").height(bfh);
+        console.log('2');
+
     }
     /* End: adjustFooterHeight */
 
@@ -626,11 +711,15 @@
 
         var l = href.split("/");
         var cl = currenturl.split("/");
+        console.log(l);
 
         if (href != currenturl) {
             if (l[2] == "project") {
                 // send the slug only
                 goToProject(href, l[3]);
+            }
+            else if (l[1] == "project") {
+              goToProject(href, l[2]);
             }
             currenturl = href;
         }
@@ -746,37 +835,23 @@
                 $('.single-expand').click();
             }
 
-            if (dir == "u") {
-                current.stop().animate({
-                    top: currentTop + wh + gutter
-                }, {
-                    duration: speed - 100,
-                    easing: easing
-                }).hide().css("top", currentTop + "px");
+            if (dir == "u")
+            {
+                current.stop().animate({ top: currentTop + wh + gutter }, { duration: speed - 100, easing: easing }).hide().css("top", currentTop + "px");
 
-                slideToShow.css("top", (imgDim[3] - wh - gutter) + "px").show(0).stop().animate({
-                    top: imgDim[3]
-                }, {
-                    duration: speed,
-                    easing: easing
-                });
+                slideToShow.css("top", (imgDim[3] - wh - gutter) + "px").show(0).stop().animate({ top: imgDim[3] }, { duration: speed, easing: easing });
 
                 newLeft = ($(".proj.active .slide").length - 1) * 13;
-            } else {
-                current.stop().animate({
-                    top: (currentTop - wh)
-                }, {
-                    duration: speed - 100,
-                    easing: easing
-                }).hide(0).css("top", currentTop + "px");
-                slideToShow.css("top", (ww + imgDim[3]) + "px").show(0).stop().animate({
-                    top: imgDim[3]
-                }, {
-                    duration: speed,
-                    easing: easing
-                });
             }
-        } else {
+            else
+            {
+                current.stop().animate({ top: (currentTop - wh) }, { duration: speed - 100, easing: easing }).hide(0).css("top", currentTop + "px");
+                slideToShow.css("top", (ww + imgDim[3]) + "px").show(0).stop().animate({ top: imgDim[3] }, { duration: speed, easing: easing });
+            }
+        }
+
+        else
+        {
             // On mobile device so slide is left and right
 
             slideToShow = nextProj;
@@ -786,43 +861,20 @@
                 $('.single-expand').click();
             }
 
-            if (dir == "u") {
-                current.stop().animate({
-                    left: ww
-                }, {
-                    duration: 50,
-                    easing: easing,
-                    complete: function() {
-                        $(this).hide().css("left", "0");
-                    }
-                });
+            if (dir == "u")
+            {
+                current.stop().animate({ left: ww }, { duration: 50, easing: easing, complete: function() { $(this).hide().css("left", "0"); } });
 
                 //slideToShow.css('height',$(window).height() - 90);
-                slideToShow.css("left", "-" + ww + "px").show(0).stop().animate({
-                    left: 0
-                }, {
-                    duration: 300,
-                    easing: easing
-                });
+                slideToShow.css("left", "-" + ww + "px").show(0).stop().animate({ left: 0 }, { duration: 300, easing: easing });
 
-            } else {
-                current.stop().animate({
-                    left: -ww
-                }, {
-                    duration: 50,
-                    easing: easing,
-                    complete: function() {
-                        $(this).hide(0).css("left", "0px");
-                    }
-                });
+            }
+            else
+            {
+                current.stop().animate({ left: -ww }, { duration: 50, easing: easing, complete: function() { $(this).hide(0).css("left", "0px"); } });
 
                 //slideToShow.css('height',$(window).height() - 90);
-                slideToShow.css("left", ww + "px").show(0).stop().animate({
-                    left: 0
-                }, {
-                    duration: 300,
-                    easing: easing
-                });
+                slideToShow.css("left", ww + "px").show(0).stop().animate({ left: 0 }, { duration: 300, easing: easing });
             }
         }
 

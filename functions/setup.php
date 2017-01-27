@@ -109,3 +109,27 @@ function swl_redirect_404()
     }
 }
 add_action('template_redirect', 'swl_redirect_404', 1);
+
+// Add the javascript api option to vimeo embedded videos so we can control with javascript
+add_filter( 'oembed_result', function ( $html, $url, $args ) {
+    $doc = new DOMDocument();
+    $doc->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+    $tags = $doc->getElementsByTagName( 'iframe' );
+
+    foreach ( $tags as $tag ) {
+        $iframe_src = $tag->attributes->getNamedItem('src')->value;
+
+        if ( false !== strpos( $iframe_src, 'vimeo.com' ) ) {
+            // https://developer.vimeo.com/player/embedding
+            $url = add_query_arg( array(
+                'api' => 1
+            ), $iframe_src );
+        }
+
+        $tag->setAttribute( 'src', $url );
+
+        $html = $doc->saveHTML();
+    }
+
+    return $html;
+}, 10, 3 );

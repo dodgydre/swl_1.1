@@ -30,9 +30,24 @@ global $template;
   <!-- Start Header -->
   <div class="header__container">
     <div class="header__wrapper">
-      <a href="<?php echo esc_url(home_url('/')); ?>" class="logo-large-image">
-        <img src="<?php echo get_template_directory_uri(); ?>/images/logo.gif" alt="Structure Workshop Engineering and Technical Design" />
+      <a href="<?php echo esc_url(home_url('/')); ?>">
+        <img class="logo-large-image" src="<?php echo get_template_directory_uri(); ?>/images/structure_workshop.png" alt="Structure Workshop" width="225px" height="15px" />
+
+        <?php
+          /* Only show the sub-logo when on index page with no menu showing */
+          if (basename($template) == 'index.php' && ! (isset($_GET['swl']) && $_GET['swl'] == '1') ) {
+            ?>
+            <img class="sub_logo-large-image" src="<?php echo get_template_directory_uri(); ?>/images/eng_tech_design.png" alt="Engineering and Technical Design" width="223px" height="12px" />
+            <?php
+          } else if ( basename($template) == 'index.php' && (isset($_GET['swl']) && $_GET['swl'] == '1') ) {
+            ?>
+            <img class="sub_logo-large-image is-hidden" src="<?php echo get_template_directory_uri(); ?>/images/eng_tech_design.png" alt="Engineering and Technical Design" width="223px" height="12px" />
+            <?php
+          }
+        ?>
+
       </a>
+
       <a href="<?php echo esc_url(home_url('/')); ?>" class="logo-small-image">
         <img src="<?php echo get_template_directory_uri(); ?>/images/logo_small.gif" alt="Structure Workshop Engineering and Technical Design" />
       </a>
@@ -41,85 +56,139 @@ global $template;
         <a class="header__icon" id="header__icon-open" href="<?php echo esc_url(home_url('/?swl=1')); ?>">
           <img src="<?php echo get_template_directory_uri(); ?>/images/menu-icon.gif" alt="menu" />
         </a>
-        <!-- TODO Check if it is 'projects' ! -->
-        <div class="large-menu <?php
-          if (basename($template) == 'archive-project.php'
-              || basename($template) == 'single-project.php'
-              || basename($template) == 'contact.php'
-              || basename($template) == 'practice-profile.php'
-              || basename($template) == 'practice-jobs.php'
-              || basename($template) == 'archive-people.php') {
-              echo 'is-active';
-          } if (basename($template) == 'index.php' && isset($_GET['swl']) && $_GET['swl'] == '1') {
-              echo 'is-active';
-          } ?>"
-        />
-          <ul class="large-menu-list">
-            <li class="large-menu-list-item">
-              <a href="<?php echo esc_url(home_url('/project')); ?>" <?php
-                if (basename($template) == 'archive-project.php' || basename($template) == 'single-project.php') {
-                    echo 'class="active"';
-                }
-              ?>>Projects</a>
-            </li>
-
-            <li class="large-menu-list-item">
-              <a href="<?php echo esc_url(home_url('/profile')); ?>" <?php
-                if (basename($template) == 'practice-profile.php' || basename($template) == 'practice-jobs.php' || basename($template) == 'archive-people.php') {
-                    echo 'class="active"';
-                }
-              ?>>Practice</a>
-            </li>
-            <li class="large-menu-list-item">
-              <a href="<?php echo esc_url(home_url('/contact')); ?>" <?php
-                if (basename($template) == 'contact.php') {
-                    echo 'class="active"';
-                }
-              ?>>Contact</a>
-            </li>
-          </ul>
-        </div>
-
-
-        <?php
-        /* Sub menu for Practice */
-        if (basename($template) == 'practice-profile.php' || basename($template) == 'practice-jobs.php' || basename($template) == 'archive-people.php') {
-            ?>
-          <div class="large-menu-sub is-active">
-            <ul class="large-menu-sub-list">
-              <li class="large-menu-sub-item">
-                <a href="<?php echo esc_url(home_url('/profile'));
-            ?>" <?php
-                  if (basename($template) == 'practice-profile.php') {
-                      echo 'class="active"';
-                  }
-            ?>>Profile</a>
-              </li>
-              <li class="large-menu-sub-item">
-                <a href="<?php echo esc_url(home_url('/people'));
-            ?>" <?php
-                  if (basename($template) == 'archive-people.php') {
-                      echo 'class="active"';
-                  }
-            ?>>People</a>
-              </li>
-              <li class="large-menu-sub-item">
-                <a href="<?php echo esc_url(home_url('/jobs'));
-            ?>" <?php
-                  if (basename($template) == 'practice-jobs.php') {
-                      echo 'class="active"';
-                  }
-            ?>>Job Enquiries</a>
-              </li>
-            </ul>
-          </div>
-          <?php
-
-        }
-        /* End Sub Menu for Practice */
-        ?>
       </div>
+
+
+      <!-- TODO Check if it is 'projects' ! -->
+      <div class="large-menu <?php
+        if (basename($template) == 'archive-project.php'
+            || basename($template) == 'single-project.php'
+            || basename($template) == 'contact.php'
+            || basename($template) == 'practice-profile.php'
+            || basename($template) == 'practice-jobs.php'
+            || basename($template) == 'archive-people.php') {
+            echo 'is-active';
+        } if (basename($template) == 'index.php' && isset($_GET['swl']) && $_GET['swl'] == '1') {
+            echo 'is-active';
+        } ?>"
+      />
+        <a href="<?php echo esc_url(home_url('/profile')); ?>">
+          <span class="information_menu_icon">
+          <?php
+          if ( basename($template) == 'practice-profile.php' || basename($template) == 'practice-jobs.php' || basename($template) == 'archive-people.php' || basename($template) == 'contact.php' ) {
+            ?>
+              <img src="<?php echo get_template_directory_uri(); ?>/images/information_active.png" width="75px" height="15px" />
+            <?php
+          } else {
+            ?>
+              <img src="<?php echo get_template_directory_uri(); ?>/images/information.png" width="75px" height="15px" />
+            <?php
+          }
+          ?>
+          </span>
+        </a>
+
+        <a href="<?php echo esc_url(home_url('/project')); ?>">
+          <span class="projects_menu_icon">
+          <?php
+          if ( basename($template) == 'archive-project.php' || basename($template) == 'single-project.php' ) {
+            ?>
+              <img src="<?php echo get_template_directory_uri(); ?>/images/projects_active.png" width="75px" height="15px" />
+            <?php
+          } else {
+            ?>
+              <img src="<?php echo get_template_directory_uri(); ?>/images/projects.png" width="75px" height="15px" />
+            <?php
+          }
+          ?>
+          </span>
+        </a>
+      </div>
+
+
+      <?php
+      /* Sub menu for Practice */
+      if ( basename($template) == 'practice-profile.php'
+          || basename($template) == 'practice-jobs.php'
+          || basename($template) == 'archive-people.php'
+          || basename($template) == 'contact.php' ) {
+          ?>
+        <div class="large-menu-sub is-active">
+
+          <a href="<?php echo esc_url(home_url('/profile')); ?>">
+            <span class="profile_menu_icon">
+            <?php
+            if ( basename($template) == 'practice-profile.php' ) {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/profile_active.png" width="75px" height="15px" />
+              <?php
+            } else {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/profile.png" width="75px" height="15px" />
+              <?php
+            }
+            ?>
+            </span>
+          </a>
+          <!-- // TODO: Change this to a page again? -->
+          <a href="<?php echo esc_url(home_url('/people')); ?>">
+            <span class="team_menu_icon">
+            <?php
+            if ( basename($template) == 'archive-people.php' ) {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/team_active.png" width="75px" height="15px" />
+              <?php
+            } else {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/team.png" width="75px" height="15px" />
+              <?php
+            }
+            ?>
+            </span>
+          </a>
+
+          <a href="<?php echo esc_url(home_url('/jobs')); ?>">
+            <span class="jobs_menu_icon">
+            <?php
+            if ( basename($template) == 'practice-jobs.php' ) {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/jobs_active.png" width="120px" height="15px" />
+              <?php
+            } else {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/jobs.png" width="120px" height="15px" />
+              <?php
+            }
+            ?>
+            </span>
+          </a>
+
+          <a href="<?php echo esc_url(home_url('/contact')); ?>">
+            <span class="contact_menu_icon">
+            <?php
+            if ( basename($template) == 'contact.php' ) {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/contact_active.png" width="75px" height="15px" />
+              <?php
+            } else {
+              ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/images/contact.png" width="75px" height="15px" />
+              <?php
+            }
+            ?>
+            </span>
+          </a>
+
+
+        </div>
+        <?php
+
+      }
+      /* End Sub Menu for Practice */
+      ?>
     </div>
+
+
   </div>
   <!-- End Header -->
 

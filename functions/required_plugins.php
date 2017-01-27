@@ -43,6 +43,16 @@ function swl_register_required_plugins()
             'required' => true,
         ),
         array(
+            'name' => 'Meta Box Columns Extension',
+            'slug' => 'meta-box-columns',
+            'required' => true,
+        ),
+        array(
+            'name' => 'Meta Box Group Extension',
+            'slug' => 'meta-box-group',
+            'required' => true,
+        ),
+        array(
             'name' => 'Regenerate Thumbnails',
             'slug' => 'regenerate-thumbnails',
             'required' => false,

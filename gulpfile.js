@@ -36,14 +36,14 @@ elixir(function(mix) {
     ], './js/index.docready.min.js');
     mix.scripts([
         //'./assets/js/jQuery.easing.1.3.js',
-        //'./assets/js/jQuery.touchSwipe.min.js',
+        './assets/js/jQuery.touchSwipe.min.js',
         //'./assets/js/selectize.min.js',
         //'./assets/js/isotope.pkgd.3.0.1.min.js',
         './assets/js/skip-link-focus-fix.js',
         './assets/js/navigation.js',
         './assets/js/history.js',
         './assets/js/jQuery.imagesLoaded.min.js',
-        './assets/js/jquery.mobile.custom.js',
+        //'./assets/js/jquery.mobile.custom.js',
     ], './js/plugins.min.js');
     mix.scripts([
         './assets/js/swl_ajax_get_posts.js',

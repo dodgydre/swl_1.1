@@ -78,12 +78,12 @@
                     easing: "jswing"
                 });
                 $(".single-footer__container").removeClass("expanded");
-                $(".single-footer__more").text(" / Read More");
+                $(".single-footer__more").text(" / Read text");
             } else {
                 // otherwise expand it
                 adjustFooterHeight(200);
                 $(".single-footer__container").addClass("expanded");
-                $(".single-footer__more").text(" / Hide Text");
+                $(".single-footer__more").text(" / Hide text");
             }
         });
         /* -------  End Button for footer expand --------- */
@@ -91,11 +91,11 @@
 
         /* NOTE: Start More button for image in mobile size */
         $('.more').click(function() {
-            if ($(this).html() == '/ Read More') {
-                $(this).html('/ Hide Text');
+            if ($(this).html() == '/ Read text') {
+                $(this).html('/ Hide text');
                 $(this).nextAll('.description').first().addClass('active');
             } else {
-                $(this).html('/ Read More');
+                $(this).html('/ Read text');
                 $(this).nextAll('.description').first().removeClass('active');
             }
         });
@@ -162,7 +162,7 @@
                 sf = parseFloat(sf / 100);
                 fit = true;
             }
-
+            /*
             if ($(this).hasClass("full")) {
                 var thisimg = $(this);
                 var containerW = ww;
@@ -186,9 +186,9 @@
                         .css('left', '0');
                 }
 
-            } else {
+            } else {*/
                 imgResize(thisimg, ww, iah, "position", 0, 0, 0, 0);
-            }
+            /*}*/
         });
         //end resize each picture
         // NOTE: splash3
@@ -267,20 +267,23 @@
             }
         }
 
+        // If image is to be full screen
         if (el.hasClass('full')) {
             if (cR > iR) {
+                // landscape. set width equal to container.  centre image vertically
                 iw = cw;
                 ih = iw / iR;
                 iml = 0;
-                imt = -(iw - cw) / 2;
+                imt = - ((ih - ch) / 2);
             } else {
+                // portrait. set height equal to container. centre image horizontally
                 ih = ch;
                 iw = ih * iR;
-                iml = -(ih - ch) / 2;
+                iml = -((iw - cw) / 2);
                 imt = 0;
             }
         }
-
+        
         if (prop == "margin") {
             el.width(iw).height(ih).css({
                 marginTop: imt + "px",

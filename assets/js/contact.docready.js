@@ -75,9 +75,14 @@ function initMap() {
     lng: -0.1001635
   };
 
+  var elephant = {
+    lat: 51.498783,
+    lng: -0.105004
+  };
+
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 14,
-    center: swl,
+    center: elephant,
     styles: [
       {
           "stylers": [

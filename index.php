@@ -17,7 +17,9 @@ get_header(); ?>
     	<div id="image_container" class="proj active">
 
 				<?php
-
+                $proj_date_months = [
+                  'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+                ];
                 $fp_images = new WP_Query(array(
                         'post_type' => 'fp_image',
                         'posts_per_page' => -1,
@@ -26,9 +28,14 @@ get_header(); ?>
                 while ($fp_images->have_posts()) : $fp_images->the_post();
 
                     $proj_meta = get_post_meta($post->ID);
-
-                    if (array_key_exists('fp_image_date', $proj_meta)) {
-                        $proj_date = $proj_meta['fp_image_date'][0];
+                    $proj_date = '';
+                    if (array_key_exists('fp_image_month', $proj_meta)) {
+                      $proj_date .= $proj_date_months[$proj_meta['fp_image_month'][0]];
+                      if (array_key_exists('fp_image_date', $proj_meta)) {
+                          $proj_date .= ", " . $proj_meta['fp_image_date'][0];
+                      }
+                    } else if (array_key_exists('fp_image_date', $proj_meta)) {
+                        $proj_date .= $proj_meta['fp_image_date'][0];
                     }
                     ?>
 
@@ -53,7 +60,7 @@ get_header(); ?>
                         ?></span>
 						<?php
                             if (array_key_exists('fp_image_description', $proj_meta)) {
-                                echo "<span class='more'>/ Read More</span>";
+                                echo "<span class='more'>/ Read text</span>";
                                 echo "<span class='description'>".$proj_meta['fp_image_description'][0].'</span>';
                             } else {
                                 echo "<span class='more'></span>";
@@ -82,7 +89,7 @@ get_header(); ?>
       <a class="expand">
         <span class="footer__caption-date"></span>
         <span class="footer__caption"></span>
-        <span class="footer__more">/ Read More</span>
+        <span class="footer__more">/ Read text</span>
       </a>
     </div>
   </div>

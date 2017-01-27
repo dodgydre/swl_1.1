@@ -95,11 +95,12 @@
                 $('.large-menu-filter').toggleClass('is-active');
                 $('.large-menu_mobile').toggleClass('is-active');
                 $('.large-menu-search').toggleClass('is-active');
+                $('.sub_logo-large-image').toggleClass('is-hidden');
                 return false;
             }
             // archive-project in mobile mode
             else if( $('body').hasClass('post-type-archive-people')) {
-                
+
             }
             else if ($('body').hasClass('mobile')) {
                 e.preventDefault();
@@ -149,7 +150,7 @@
                     easing: 'jswing'
                 });
                 $('.footer__container').removeClass('expanded');
-                $('.footer__more').text(" / Read More");
+                $('.footer__more').text(" / Read text");
 
             } else {
                 adjustFooterHeight();
@@ -352,11 +353,11 @@
 
         /* NOTE: Start More button for cover images in mobile size */
         $('.more').click(function() {
-            if ($(this).html() == '/ Read More') {
-                $(this).html('/ Hide Text');
+            if ($(this).html() == '/ Read text') {
+                $(this).html('/ Hide text');
                 $(this).nextAll('.description').first().addClass('active');
             } else {
-                $(this).html('/ Read More');
+                $(this).html('/ Read text');
                 $(this).nextAll('.description').first().removeClass('active');
             }
         });
@@ -428,7 +429,7 @@
                 fit = true;
             }
 
-            if ($(this).hasClass("full")) {
+            /*if ($(this).hasClass("full")) {
 
                 containerW = ww;
                 containerH = iah;
@@ -457,7 +458,7 @@
         //end resize each picture
 
         //$(".arrw.left, .arrw.right").height(iah).width((ww / 2) - (ww / 10));
-        $(".arrw.left, .arrw.right").not('.small').height(iah).width((ww/2) - (ww/10)).css("top","0");
+        $(".arrw.left, .arrw.right").not('.small').height(iah).width((ww/2)).css("top","0");
 
 
         // Resize the projthumbs in the archive-project page
@@ -637,17 +638,19 @@
                 imt = (ch - ih) / 2 - toff;
             }
         }
-
+        // If image is to be full screen
         if (el.hasClass('full')) {
             if (cR > iR) {
+                // landscape. set width equal to container.  centre image vertically
                 iw = cw;
                 ih = iw / iR;
                 iml = 0;
-                imt = -(iw - cw) / 2;
+                imt = - ((ih - ch) / 2);
             } else {
+                // portrait. set height equal to container. centre image horizontally
                 ih = ch;
                 iw = ih * iR;
-                iml = -(ih - ch) / 2;
+                iml = -((iw - cw) / 2);
                 imt = 0;
             }
         }

@@ -33,7 +33,7 @@
               <span class="single-footer__caption">
                 <?php echo the_title(); ?>
               </span>
-              <span class="single-footer__more">/ Hide Text</span>
+              <span class="single-footer__more">/ Hide text</span>
             </a>
         	</div>
         </div>

@@ -65,8 +65,20 @@
 
   .logo-large-image {
     display: inline-block;
+    line-height: 15px;
     position: absolute;
-    top: 25px;
+    top: 29px;
+  }
+
+  .sub_logo-large-image {
+    display: inline-block;
+    line-height: 15px;
+    position: absolute;
+    top: 60px;
+
+    &.is-hidden {
+      display: none;
+    }
   }
 
   .logo-small-image {
@@ -86,6 +98,10 @@
     top: 10px;
     //float: left;
     //margin-right: 50px;
+  }
+
+  .sub_logo-large-image {
+    display: none;
   }
 
   .logo-large-image {
@@ -110,7 +126,7 @@
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: small;
-    font-weight: 400;
+    font-weight: 300;
     width: 6em;
   }
 
@@ -118,7 +134,7 @@
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: small;
-    font-weight: 400;
+    font-weight: 300;
     text-transform: uppercase;
     //width: 25em;
     //margin-right: 50px;
@@ -260,7 +276,7 @@
     float: left;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: smaller;
-    font-weight: 400;
+    font-weight: 300;
     overflow-x: hidden;
     text-overflow: ellipsis;
     text-transform: uppercase;
@@ -274,7 +290,7 @@
     font-size: smaller;
     font-weight: 300;
     padding-left: .5em;
-    width: 4em;
+    width: 6em;
   }
 
   .single-project > .caption {
@@ -304,7 +320,7 @@
       float: left;
       font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       font-size: small;
-      font-weight: 400;
+      font-weight: 300;
       width: 6em;
     }
 
@@ -312,7 +328,7 @@
       float: left;
       font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       font-size: small;
-      font-weight: 400;
+      font-weight: 300;
       text-transform: uppercase;
       //width: 25em;
       //margin-right: 50px;
@@ -387,7 +403,7 @@
     margin-left: 30px;
     margin-top: 20px;
     overflow: hidden;
-    width: 50%;
+    width: calc(100% - 60px);
   }
 
   .single-below-footer__description {
@@ -453,6 +469,7 @@
   }
 
   // show the large size menu
+  /*
   .large-menu {
     float: left;
     overflow: hidden;
@@ -463,7 +480,7 @@
   }
 
   .large-menu.is-active {
-    width: 105px;
+    //width: 105px;
     //transition: width 0.3s;
   }
 
@@ -493,15 +510,65 @@
     &.active {
       color: $color__link-active;
     }
+  } */
+
+  .large-menu {
+    display: none;
+
+    &.is-active {
+      display: block;
+    }
+
+    .information_menu_icon {
+      position: absolute;
+      left: 405px;
+      line-height: 1;
+      top: 29px;
+    }
+
+    .projects_menu_icon {
+      position: absolute;
+      left: 405px;
+      line-height: 1;
+      top: 44px;
+    }
   }
 
   // Filter Menu
   .large-menu-sub {
     display: none;
-    float: left;
-    overflow: hidden;
-    position: relative;
-    top: 28px;
+    //float: left;
+    //overflow: hidden;
+    //position: relative;
+    //top: 28px;
+
+    .profile_menu_icon {
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 29px;
+    }
+
+    .team_menu_icon {
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 44px;
+    }
+
+    .jobs_menu_icon {
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 59px;
+    }
+
+    .contact_menu_icon {
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 74px;
+    }
   }
 
   .large-menu-sub.is-active {
@@ -618,7 +685,7 @@
   }
 
   .search-icon {
-    left: 465px;
+    left: 510px;
     position: fixed;
     top: 29px;
     z-index: 50001;

@@ -1059,22 +1059,74 @@ object {
     display: none; }
   .large-menu_mobile.is-active {
     display: none; }
-  /*
+  .large-menu-icon {
+    background: url("./images/header_icons.gif") no-repeat top left;
+    background-size: 241px 91px;
+    height: 15px; }
   .large-menu {
-    float: left;
-    overflow: hidden;
-    position: relative;
-    top: 28px;
-    width: 0;
-    //transition: width 0.3s;
-  }
-
-  .large-menu.is-active {
-    //width: 105px;
-    //transition: width 0.3s;
-  }
-
-  .large-menu-list {
+    display: none; }
+    .large-menu.is-active {
+      display: block; }
+    .large-menu .information {
+      background-position: 0 0;
+      left: 405px;
+      line-height: 1;
+      position: absolute;
+      top: 29px;
+      width: 90px; }
+      .large-menu .information.active {
+        background-position: -120px 0; }
+    .large-menu .projects {
+      background-position: 0 -15px;
+      left: 405px;
+      line-height: 1;
+      position: absolute;
+      top: 44px;
+      width: 90px; }
+      .large-menu .projects.active {
+        background-position: -120px -15px; }
+  .large-menu-sub {
+    display: none; }
+    .large-menu-sub .profile {
+      background-position: 0 -30px;
+      left: 495px;
+      line-height: 1;
+      position: absolute;
+      top: 29px;
+      width: 90px; }
+      .large-menu-sub .profile.active {
+        background-position: -120px -30px; }
+    .large-menu-sub .team {
+      background-position: 0 -45px;
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 44px;
+      width: 90px; }
+      .large-menu-sub .team.active {
+        background-position: -120px -45px; }
+    .large-menu-sub .jobs {
+      background-position: 0 -60px;
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 59px;
+      width: 120px; }
+      .large-menu-sub .jobs.active {
+        background-position: -120px -60px; }
+    .large-menu-sub .contact {
+      background-position: 0 -75px;
+      position: absolute;
+      left: 495px;
+      line-height: 1;
+      top: 74px;
+      width: 90px; }
+      .large-menu-sub .contact.active {
+        background-position: -120px -75px; }
+  .large-menu-sub.is-active {
+    display: block; }
+  /* This was when it was text in the large menu sub.  can delete.
+  .large-menu-sub-list {
     list-style: none;
     margin: 0;
     margin-top: -3px;
@@ -1082,82 +1134,24 @@ object {
     top: 0;
   }
 
-  .large-menu-list-item {
-    display: block;
-    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    margin: 0;
-    margin-left: 30px;
-    //line-height: 105px;
-    //margin-bottom: 2px;
-  }
-
-  .large-menu-list-item a {
-    color: $color__link;
-    text-decoration: none;
-
-    &.active {
-      color: $color__link-active;
-    }
-  } */
-  .large-menu {
-    display: none; }
-    .large-menu.is-active {
-      display: block; }
-    .large-menu .information_menu_icon {
-      position: absolute;
-      left: 405px;
-      line-height: 1;
-      top: 29px; }
-    .large-menu .projects_menu_icon {
-      position: absolute;
-      left: 405px;
-      line-height: 1;
-      top: 44px; }
-  .large-menu-sub {
-    display: none; }
-    .large-menu-sub .profile_menu_icon {
-      position: absolute;
-      left: 495px;
-      line-height: 1;
-      top: 29px; }
-    .large-menu-sub .team_menu_icon {
-      position: absolute;
-      left: 495px;
-      line-height: 1;
-      top: 44px; }
-    .large-menu-sub .jobs_menu_icon {
-      position: absolute;
-      left: 495px;
-      line-height: 1;
-      top: 59px; }
-    .large-menu-sub .contact_menu_icon {
-      position: absolute;
-      left: 495px;
-      line-height: 1;
-      top: 74px; }
-  .large-menu-sub.is-active {
-    display: block; }
-  .large-menu-sub-list {
-    list-style: none;
-    margin: 0;
-    margin-top: -3px;
-    padding: 0;
-    top: 0; }
   .large-menu-sub-item {
     display: block;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: 12px;
     font-weight: 400;
     margin: 0;
-    margin-left: 0; }
+    margin-left: 0;
+  }
+
   .large-menu-sub-item a {
-    color: #373a3c;
+    color: $color__link;
     padding-bottom: 3px;
-    text-decoration: none; }
-    .large-menu-sub-item a.active {
-      color: #ff4949; } }
+    text-decoration: none;
+
+    &.active {
+      color: $color__link-active;
+    }
+  }*/ }
 
 @media (max-width: 768px) {
   .large-menu {
@@ -1203,7 +1197,7 @@ object {
   .large-menu-search.is-active {
     display: block; }
   .search {
-    left: 495px;
+    left: 525px;
     overflow-x: hidden;
     overflow-y: auto;
     position: fixed;
@@ -1218,7 +1212,9 @@ object {
   #searchIcon {
     float: left;
     margin-left: 1px;
-    margin-top: 1px; } }
+    margin-top: 1px;
+    height: 14px;
+    width: 11px; } }
 
 @media (max-width: 768px) {
   .large-menu-search,
@@ -1308,7 +1304,6 @@ object {
     text-transform: capitalize;
     white-space: nowrap; }
   .description {
-    border-bottom: 1px solid #efefef;
     clear: left;
     display: block;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
@@ -1317,8 +1312,8 @@ object {
     height: 0;
     line-height: 1.35em;
     margin: 20px;
+    margin-bottom: 0;
     max-height: 0;
-    overflow-y: auto;
     padding-bottom: 0;
     padding-left: 10px;
     padding-right: 10px;
@@ -1383,7 +1378,7 @@ object {
 
 @media (max-width: 768px) {
   .projthumb-wrap {
-    margin-top: 30px;
+    margin-top: 55px;
     padding: 0 30px;
     width: 100%; }
   .projthumb {

@@ -127,7 +127,7 @@
   }
 
   .description {
-    border-bottom: 1px solid $color__border-swl;
+    //border-bottom: 1px solid $color__border-swl;
     clear: left;
     display: block;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
@@ -136,8 +136,9 @@
     height: 0;
     line-height: 1.35em;
     margin: 20px;
+    margin-bottom: 0;
     max-height: 0;
-    overflow-y: auto;
+    //overflow-y: auto;
     padding-bottom: 0;
     padding-left: 10px;
     padding-right: 10px;
@@ -178,7 +179,7 @@
 
 @media (max-width: 768px) {
   .projthumb-wrap {
-    margin-top: 30px;
+    margin-top: 55px;
     padding: 0 30px;
     //padding: 0px 30px 20px 30px;
     width: 100%;

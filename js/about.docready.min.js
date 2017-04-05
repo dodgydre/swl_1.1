@@ -283,7 +283,7 @@
                 imt = 0;
             }
         }
-        
+
         if (prop == "margin") {
             el.width(iw).height(ih).css({
                 marginTop: imt + "px",
@@ -320,7 +320,7 @@
 
         if (bfh > (ch - 150)) {
             bfh = ch - 150;
-            $(".single-below-footer__description").height(bfh).css('overflow-y', 'scroll');
+            //$(".single-below-footer__description").height(bfh).css('overflow-y', 'scroll');
             $(".single-below-footer__container").css('overflow-y', 'scroll');
         }
 

@@ -119,14 +119,12 @@ get_header();
                 ?>
 
                 <div class="projtext" <?php echo $text_details; ?> >
-                    <?php echo the_title(); ?>
-
-    <?php
-
+                    <?php echo get_the_title();?>
+<?php
                         if (isset($proj_date)) {
                             echo ', '.$proj_date;
                         } ?>
-    <br />
+<br />
     <?php
                         if (isset($proj_city) && isset($proj_country)) {
                             echo $proj_city.', '.$proj_country;

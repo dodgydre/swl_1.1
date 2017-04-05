@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
 
     //"use strict";
 
@@ -19,31 +19,375 @@
         currenturl = window.location.pathname,
         centered = true;
 
-    $(document).ready(function() {
+
+    /**************************************************************************/
+    /* imgResize
+    /*
+    /* Resize an image
+    /*
+    /* Inputs
+    /* element, container width, container height, css property (margin / top), width offet, height offset, left offset, top offset
+    /**************************************************************************/
+    function imgResize(el, cw, ch, prop, woff, hoff, loff, toff) {
+        var iR, sf, fit,
+            cR, ih, iw, imt, iml,
+            imgDim = new Array(4);
+
+        iR = parseFloat(el.data("r"));
+        cR = (cw - woff) / (ch - hoff);
+        sf = el.data("f");
+
+        if (sf === 200) {
+            sf = 1;
+            fit = false;
+        } else {
+            sf = parseFloat(sf / 100);
+            fit = true;
+        }
+
+        //element ratio
+        if (!iR) {
+            iR = el.width() / el.height();
+        }
+        //scale factor
+        if (!sf) {
+            sf = 1;
+        }
+
+        // fit inside container
+        if (fit) {
+            //cR = (cw - woff) / (ch - hoff);
+            if (cR > iR) {
+                ih = (ch - hoff) * sf;
+                iw = ih * iR;
+            } else {
+                iw = (cw - woff) * sf;
+                ih = iw / iR;
+            }
+            imt = (ch - hoff - ih) / 2;
+            iml = (cw - woff - iw) / 2;
+        } else { // fill container
+            //cr = (cw / ch);
+            if (iR < 1) {
+                //image is portrait
+                iw = cw;
+                ih = iw / iR;
+                if (ih < ch) {
+                    ih = ch;
+                    iw = ih * iR;
+                    iml = (cw - iw) / 2 - loff;
+                    imt = (ch - ih) / 2 - toff;
+                } else {
+                    imt = (ch - ih) / 2 - toff;
+                    iml = (cw - iw) / 2 - loff;
+                }
+            } else {
+                // image is landscape
+                ih = ch;
+                iw = ih * iR;
+
+                if (iw < cw) {
+                    iw = cw;
+                    ih = iw / iR;
+                }
+
+                iml = (cw - iw) / 2 - loff;
+                imt = (ch - ih) / 2 - toff;
+            }
+        }
+        // If image is to be full screen
+        if (el.hasClass('full')) {
+            if (cR > iR) {
+                // landscape. set width equal to container.  centre image vertically
+                iw = cw;
+                ih = iw / iR;
+                iml = 0;
+                imt = -((ih - ch) / 2);
+            } else {
+                // portrait. set height equal to container. centre image horizontally
+                ih = ch;
+                iw = ih * iR;
+                iml = -((iw - cw) / 2);
+                imt = 0;
+            }
+        }
+
+        if (prop === "margin") {
+            el.width(iw).height(ih).css({
+                marginTop: imt + "px",
+                marginLeft: iml + "px"
+            });
+        } else if (prop === "position") {
+            el.width(iw).height(ih).css({
+                top: imt + "px",
+                left: iml + "px"
+            });
+        } else if (prop === "array") {
+            imgDim[0] = iw;
+            imgDim[1] = ih;
+            imgDim[2] = iml;
+            imgDim[3] = imt;
+            return imgDim;
+        }
+    }
+    /* End Resize Image */
+
+    /**************************************************************************/
+    /* resizeSite
+    /*
+    /* Resize the whole site and set the classes on the divs if it goes large
+    /* or mobile
+    /**************************************************************************/
+    function resizeSite() {
+        var ww, wh, iah, minww, minwh, siteratio, iR, pw,
+            thisImg, thisText, width, height, imgleft, imgtop,
+            sf, fit;
+
+        ww = $(window).width();
+        wh = $(window).height();
+        iah = wh - headerheight - footerheight;
+        siteratio = ww / iah;
+
+        if (ww < minww) { ww = minww; }
+        if (wh < minwh) { wh = minwh; }
+
+        // resize the container
+        $('#site, .site').width(ww).height(iah);
+        $('#proj_img').width(ww).height(iah);
+        $('#proj_img').css('width', ww + "px").css('height', iah + "px");
+
+
+        // If the window is less than 769px hide the arrows
+        if ($('body').hasClass('mobile')) {
+            $('.arrw').hide();
+            $('#proj_img img').each(function () {
+                $(this).removeClass('slide').addClass('project_image');
+                $(this).css('width', '100%').css('display', 'block').css('height', '');
+            });
+        } else {
+            // otherwise show them
+            $('.arrw').show();
+            $('#proj_img img').each(function () {
+                $(this).addClass('slide').removeClass('project_image');
+            });
+        }
+
+        // resize each picture
+        $('#proj_img .slide').each(function () {
+
+            thisImg = $(this);
+            iR = parseFloat(thisImg.data("r"));
+            sf = thisImg.data("f");
+
+            if (sf === 200) {
+                sf = 1;
+                fit = false;
+            } else {
+                sf = parseFloat(sf / 100);
+                fit = true;
+            }
+
+            imgResize(thisImg, ww, iah, "position", 0, 0, 0, 0);
+        });
+        //end resize each picture
+
+        //$(".arrw.left, .arrw.right").height(iah).width((ww / 2) - (ww / 10));
+        $(".arrw.left, .arrw.right").not('.small').height(iah).width((ww / 2)).css("top", "0");
+
+
+        // Resize the projthumbs in the archive-project page
+        $('.projthumb').each(function () {
+            // MOBILE SITE -> Size of imges is 140x140
+            if ($('body').hasClass('mobile')) {
+                thisImg = $(this).find('img');
+                thisText = $(this).find('.projtext');
+                iR = thisImg.data('r');
+                // Set the grid to be 3 squares wide on all mobiles
+                pw = (ww - (3 * 30) - 20) / 3;
+
+                //console.log(pw);
+
+                // set the size of the projthumb container
+                $(this).width(pw).height(pw);
+
+                // square image
+                if (iR === 1.0) {
+                    thisImg
+                        .height(pw)
+                        .width(pw)
+                        .css('left', '0px')
+                        .css('top', '0px');
+                    thisText
+                        .css('top', (pw + 5) + 'px')
+                        .css('left', '0px');
+                } else if (iR < 1.0) {
+                    // portrait image
+                    width = iR * pw;
+                    imgleft = (pw - width) / 2;
+                    thisImg
+                        .height(pw)
+                        .width('auto')
+                        .css('left', imgleft + 'px')
+                        .css('top', '0px');
+                    thisText
+                        .css('top', (pw + 5) + 'px')
+                        //.css('left', imgleft + 'px');
+                        .css('left', '0px');
+                } else {
+                    // landscape image
+                    height = pw / iR;
+                    imgtop = (pw - height) / 2;
+                    thisImg
+                        .height('auto')
+                        .width(pw)
+                        .css('left', '0px')
+                        .css('top', imgtop + 'px');
+                    thisText
+                        .css('top', height + imgtop + 5 + 'px');
+                }
+                thisText.show();
+            } else {
+                // DESKTOP Size
+                $(this).width('').height('');
+
+                thisImg = $(this).find('img');
+                thisText = $(this).find('.projtext');
+                iR = thisImg.data('r');
+                // square image
+                if (iR === 1.0) {
+                    thisImg
+                        .height(270)
+                        .width(270)
+                        .css('left', '0px')
+                        .css('top', '0px');
+                    thisText
+                        .css('top', '275px')
+                        .css('left', '0px');
+                } else if (iR < 1.0) {
+                    // portrait image
+
+                    width = iR * 270;
+                    imgleft = (270 - width) / 2;
+                    thisImg
+                        .height(270)
+                        .width('auto')
+                        .css('left', imgleft + 'px')
+                        .css('top', '0px');
+                    thisText
+                        .css('top', '275px')
+                        .css('left', imgleft + 'px');
+                } else {
+                    // landscape image
+
+                    height = 270 / iR;
+                    imgtop = (270 - height) / 2;
+                    thisImg
+                        .height('auto')
+                        .width(270)
+                        .css('left', '0px')
+                        .css('top', imgtop + 'px');
+                    thisText
+                        .css('top', height + imgtop + 5 + 'px');
+                }
+
+                /* Add Hover to Desktop images in Project Grid*/
+                $(this).hover(
+                    function () {
+                        $(this).find(".projtext").fadeIn(100);
+                    },
+                    function () {
+                        $(this).find(".projtext").fadeOut(100);
+                    }
+                );
+            }
+        });
+    }
+    /* End Resize Site */
+
+
+    /**************************************************************************/
+    /* adjustFooterHeight
+    /*
+    /* Slide the footer up or back down
+    /**************************************************************************/
+    function adjustFooterHeight() {
+        var ch = $(window).height() - headerheight - footerheight,
+            fh = $('.footer__container').height(),
+            bfh = $('.below-footer__container')[0].scrollHeight;
+
+        if (bfh < 33) { bfh = 0; }
+
+        if (bfh > (ch - 150)) {
+            bfh = ch - 150;
+            $(".below-footer__description").height(bfh).css('overflow-y', 'scroll');
+            $(".below-footer__container").css('overflow-y', 'scroll');
+        }
+
+        $(".footer__container")
+            .stop()
+            .animate({
+                height: bfh + footerheight
+            }, {
+                duration: 200,
+                easing: 'jswing'
+            });
+        $(".below-footer__container").stop().animate({
+            marginTop: -(bfh)
+        }, {
+            duration: 200,
+            easing: 'jswing'
+        });
+        $(".below-footer__container").height(bfh);
+
+    }
+    /* End: adjustFooterHeight */
+
+
+    /*******************************************************************************
+    * setLargeWindowClasses / setMobileClasses
+    * Add the required classes to the various divs
+    *******************************************************************************/
+    function setLargeWindowClasses () {
+        $('#proj_img').addClass('large').removeClass('mobile');
+        $('#projthumb-wrap').addClass('large').removeClass('mobile');
+        $('#proj_img img').addClass('slide');
+        $('body').addClass('large').removeClass('mobile');
+        $('.search').show();
+        $('.search-icon').show();
+        $('.large-menu-search').addClass('is-active');
+    }
+    function setMobileClasses () {
+        $('#proj_img').removeClass('large').addClass('mobile');
+        $('#projthumb-wrap').removeClass('large').addClass('mobile');
+        $('#proj_img img').removeClass('slide');
+        $('.arrw').hide();
+        $('body').addClass('mobile').removeClass('large');
+
+        if ($('body').hasClass('post-type-archive-project')) {
+          //$('.large-menu-filter').toggleClass('is-active');
+          $('.large-menu_mobile').toggleClass('is-active');
+          //$('.large-menu-search').toggleClass('is-active');
+        }
+
+    }
+
+
+    $(document).ready(function () {
         /* ------ If smaller screen add mobile class to main div ------- */
         if ($(window).width() > 769) {
-            $('#proj_img').addClass('large').removeClass('mobile');
-            $('#projthumb-wrap').addClass('large').removeClass('mobile');
-            $('#proj_img img').addClass('slide');
-            $('body').addClass('large').removeClass('mobile');
-            $('.search').show();
-            $('.search-icon').show();
-            $('.large-menu-search').addClass('is-active');
+            setLargeWindowClasses();
         } else {
-            $('#proj_img').removeClass('large').addClass('mobile');
-            $('#projthumb-wrap').removeClass('large').addClass('mobile');
-            $('#proj_img img').removeClass('slide');
-            $('.arrw').hide();
-            $('body').addClass('mobile').removeClass('large');
-
+            setMobileClasses();
         }
 
         /* ------ On resizing, check the screen size again ------- */
-        $(window).resize(function() {
+        $(window).resize(function () {
 
             // Desktop Size Screens
             if ($(window).width() > 769) {
                 if ($('.mobile').length > 0) {
+                    var caption, description, imagedate;
+
                     $('#proj_img').addClass('large').removeClass('mobile');
                     $('#projthumb-wrap').addClass('large').removeClass('mobile');
                     $('body').addClass('large').removeClass('mobile');
@@ -56,18 +400,16 @@
                     $("#proj_img img").hide();
                     $('#proj_img .active img').first().fadeIn(400);
 
-                    var caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
-                    var description = $('#proj_img .active img').first().nextAll('.description').first().html();
-                    var imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
+                    caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
+                    description = $('#proj_img .active img').first().nextAll('.description').first().html();
+                    imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
 
                     $('.footer__caption').html(caption);
                     $('.footer__caption-date').html(imagedate);
                     $('.below-footer__description').html(description);
 
                 }
-            }
-            // Mobile Screens
-            else {
+            } else { // Mobile Screens
                 $('body').removeClass('large').addClass('mobile');
                 $('#proj_img').removeClass('large').addClass('mobile');
                 $('#projthumb-wrap').removeClass('large').addClass('mobile');
@@ -87,7 +429,7 @@
 
 
         /* ------ Button for menu dropdown on smaller screens ------- */
-        $('.header__icon').click(function(e) {
+        $('.header__icon').click(function (e) {
             if ($('body').hasClass('home')) {
                 e.preventDefault();
                 $('.header__icon').toggleClass('is-active');
@@ -97,32 +439,30 @@
                 $('.large-menu-search').toggleClass('is-active');
                 $('.sub_logo-large-image').toggleClass('is-hidden');
                 return false;
-            }
-            // archive-project in mobile mode
-            else if( $('body').hasClass('post-type-archive-people')) {
-
-            }
-            else if ($('body').hasClass('mobile')) {
-                e.preventDefault();
+            } else if ($('body').hasClass('mobile')) {
+                //e.preventDefault();
                 //$('.header__icon').toggleClass('is-active');
                 //$('.large-menu').toggleClass('is-active');
-                $('.large-menu-filter').toggleClass('is-active');
-                $('.large-menu_mobile').toggleClass('is-active');
-                $('.large-menu-search').toggleClass('is-active');
-            }
+                //$('.large-menu-filter').toggleClass('is-active');
+                //$('.large-menu_mobile').toggleClass('is-active');
+                //$('.large-menu-search').toggleClass('is-active');
+            } /*else if ($('body').hasClass('post-type-archive-people')) {
+            // archive-project in mobile mode
+
+            } */
         });
 
         /* Search Input Box Slideout */
-        jQuery('#searchIcon').click(function() {
-            if (jQuery('#searchElements').css('left') == '0px') {
-                jQuery('#searchElements').stop().animate({
+        $('#searchIcon').click(function () {
+            if ($('#searchElements').css('left') === '0px') {
+                $('#searchElements').stop().animate({
                     left: -302
                 }, {
                     duration: 800,
                     easing: 'jswing'
                 });
             } else {
-                jQuery('#searchElements').stop().animate({
+                $('#searchElements').stop().animate({
                     left: 0
                 }, {
                     duration: 800,
@@ -133,7 +473,7 @@
 
 
         /* ------ Button for Footer Expand ------- */
-        $('.expand').click(function(e) {
+        $('.expand').click(function (e) {
             e.preventDefault();
             /* If the footer is already expanded then lower it */
             if ($('.footer__container').hasClass('expanded')) {
@@ -167,14 +507,15 @@
         // Hide Images and Fade in the first one
         if (!$.browser.msie && $(window).width() > 769) {
             if ($("#proj_img").length > 0) {
+                var caption, description, imagedate;
                 //hide all images
                 $("#proj_img img").hide();
                 //$('#proj_img .active img').first().load(function() {
                 //$(this).fadeIn(400);
                 $('#proj_img .active img').first().fadeIn(400);
-                var caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
-                var description = $('#proj_img .active img').first().nextAll('.description').first().html();
-                var imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
+                caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
+                description = $('#proj_img .active img').first().nextAll('.description').first().html();
+                imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
 
                 $('.footer__caption').html(caption);
                 $('.footer__caption-date').html(imagedate);
@@ -185,10 +526,11 @@
         }
 
         // Project Slider
-        $("#proj_img.home .arrw").click(function() {
-            var dir, thislink;
-            var thisSlideShow, slideToShow, thisProject, current;
-            var imgDim, currentLeft, nextCurrentLeft, nextNextLeft, caption, imagedate, description;
+        $("#proj_img.home .arrw").click(function () {
+            var dir, thislink, thisSlideShow, slideToShow, thisProject, current,
+                imgDim, currentLeft, nextCurrentLeft, nextNextLeft,
+                caption, imagedate, description,
+                ww, wh, cw, ch;
 
             ww = $(window).width();
             wh = $(window).height();
@@ -211,7 +553,7 @@
             thisProject = $(".proj.active");
             current = $(".proj.active .slide:visible");
 
-            if (dir == "l") {
+            if (dir === "l") {
                 if (thisProject.find(".slide").length > 1) {
                     if (current.prevAll(".proj.active .slide").first().length > 0) {
                         // if the current slide is not the first then move one to the left.
@@ -258,16 +600,16 @@
                             .stop()
                             .animate({
                                 left: imgDim[2]
-                            }, speed, easing, function() {
+                            }, speed, easing, function () {
                                 $('.footer__caption').html(caption);
                                 $('.footer__caption-date').html(imagedate);
                                 $('.below-footer__description').html(description);
                             });
                     }
                 }
-            }
+            } else if (dir === "r") {
             /**********   SLIDE RIGHT *********/
-            else if (dir == "r") {
+
                 if (thisProject.find(".slide").length > 1) {
                     if (current.nextAll(".proj.active .slide").first().length > 0) {
                         // If we're not on the last slide, move one forward
@@ -312,7 +654,7 @@
                             .stop()
                             .animate({
                                 left: imgDim[2]
-                            }, speed, easing, function() {
+                            }, speed, easing, function () {
                                 $('.footer__caption').html(caption);
                                 $('.footer__caption-date').html(imagedate);
                                 $('.below-footer__description').html(description);
@@ -327,11 +669,11 @@
         // Use Keyboard instead of Mouse
         // TODO: This should do different on small screens?
         // For Index and Archive-Project it's ok
-        $(document).keydown(function(e) {
-            if (e.which == 37 && !e.metaKey) {
+        $(document).keydown(function (e) {
+            if (e.which === 37 && !e.metaKey) {
                 e.preventDefault();
                 $(".arrw.left").click();
-            } else if (e.which == 39 && !e.metaKey) {
+            } else if (e.which === 39 && !e.metaKey) {
                 e.preventDefault();
                 $(".arrw.right").click();
             }
@@ -340,11 +682,11 @@
         // NOTE: jQuery.touchSwipe.min.js
         $(".arrw").swipe({
             //Generic swipe handler for all directions
-            swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
-                if (direction == "left") {
+            swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+                if (direction === "left") {
                     $('.arrw.right').click();
                 }
-                if (direction == "right") {
+                if (direction === "right") {
                     $('.arrw.left').click();
                 }
             }
@@ -352,8 +694,8 @@
 
 
         /* NOTE: Start More button for cover images in mobile size */
-        $('.more').click(function() {
-            if ($(this).html() == '/ Read text') {
+        $('.more').click(function () {
+            if ($(this).html() === '/ Read text') {
                 $(this).html('/ Hide text');
                 $(this).nextAll('.description').first().addClass('active');
             } else {
@@ -363,8 +705,8 @@
         });
 
         // NOTE: If you scroll past the image then close the more info box
-        $(window).scroll(function() {
-            $('.description.active').each(function() {
+        $(window).scroll(function () {
+            $('.description.active').each(function () {
                 if ($(window).scrollTop() > $(this).nextAll('img').first().position().top) {
                     $(this).prevAll('.more').first().click();
                     $(window).scrollTop($(this).nextAll('img').first().position().top);
@@ -376,336 +718,5 @@
         /* NOTE: End More button for cover images in mobile size */
 
     }); // close >> document(ready)
-
-
-    /**************************************************************************/
-    /* Resize Site */
-    /**************************************************************************/
-    function resizeSite() {
-        var ww, wh, iah, minww, minwh, siteratio;
-
-        ww = $(window).width();
-        wh = $(window).height();
-        iah = wh - headerheight - footerheight;
-        siteratio = ww / iah;
-
-        if (ww < minww) ww = minww;
-        if (wh < minwh) wh = minwh;
-
-        // resize the container
-        $('#site, .site').width(ww).height(iah);
-        $('#proj_img').width(ww).height(iah);
-        $('#proj_img').css('width', ww + "px").css('height', iah + "px");
-
-
-        // If the window is less than 769px hide the arrows
-        if ($('body').hasClass('mobile')) {
-            $('.arrw').hide();
-            $('#proj_img img').each(function() {
-                $(this).removeClass('slide').addClass('project_image');
-                $(this).css('width', '100%').css('display', 'block').css('height', '');
-            });
-        } else {
-            // otherwise show them
-            $('.arrw').show();
-            $('#proj_img img').each(function() {
-                $(this).addClass('slide').removeClass('project_image');
-            });
-        }
-
-        // resize each picture
-        $('#proj_img .slide').each(function() {
-            var thisimg, iR, sf, fit;
-
-            thisimg = $(this);
-            iR = parseFloat(thisimg.data("r"));
-            sf = thisimg.data("f");
-
-            if (sf == 200) {
-                sf = 1;
-                fit = false;
-            } else {
-                sf = parseFloat(sf / 100);
-                fit = true;
-            }
-
-            /*if ($(this).hasClass("full")) {
-
-                containerW = ww;
-                containerH = iah;
-                containerAspect = ww / iah;
-                imageAspect = iR;
-
-                if (containerAspect < imageAspect) {
-                    var iw = iah * imageAspect;
-                    $(this)
-                        .css('width', iw)
-                        .css('height', iah)
-                        .css('top', '0')
-                        .css('left', (-(iw - ww) / 2));
-                } else {
-                    var ih = ww / imageAspect;
-                    $(this)
-                        .css('width', ww)
-                        .css('height', ih)
-                        .css('top', (-(ww / imageAspect - iah) / 2))
-                        .css('left', '0');
-                }
-            } /*else { */
-                imgResize(thisimg, ww, iah, "position", 0, 0, 0, 0);
-            /*}*/
-        });
-        //end resize each picture
-
-        //$(".arrw.left, .arrw.right").height(iah).width((ww / 2) - (ww / 10));
-        $(".arrw.left, .arrw.right").not('.small').height(iah).width((ww/2)).css("top","0");
-
-
-        // Resize the projthumbs in the archive-project page
-        $('.projthumb').each(function() {
-            // MOBILE SITE -> Size of imges is 140x140
-            if ($('body').hasClass('mobile')) {
-                thisImg = $(this).find('img');
-                thisText = $(this).find('.projtext');
-                iR = thisImg.data('r');
-                // Set the grid to be 3 squares wide on all mobiles
-                var pw = (ww - (3*30) - 20) / 3;
-                console.log(pw);
-                // set the size of the projthumb container
-                $(this).width(pw).height(pw);
-
-                // square image
-                if (iR == 1.0) {
-                    thisImg
-                        .height(pw)
-                        .width(pw)
-                        .css('left', '0px')
-                        .css('top', '0px');
-                    thisText
-                        .css('top', (pw + 5) + 'px')
-                        .css('left', '0px');
-                } else if (iR < 1.0) {
-                    // portrait image
-                    width = iR * pw;
-                    imgleft = (pw - width) / 2;
-                    thisImg
-                        .height(pw)
-                        .width('auto')
-                        .css('left', imgleft + 'px')
-                        .css('top', '0px');
-                    thisText
-                        .css('top', (pw + 5) + 'px')
-                        //.css('left', imgleft + 'px');
-                        .css('left', 0 + 'px');
-                } else {
-                    // landscape image
-                    height = pw / iR;
-                    imgtop = (pw - height) / 2;
-                    thisImg
-                        .height('auto')
-                        .width(pw)
-                        .css('left', '0px')
-                        .css('top', imgtop + 'px');
-                    thisText
-                        .css('top', height + imgtop + 5 + 'px');
-                }
-                thisText.show();
-            } else {
-                // DESKTOP Size
-                $(this).width('').height('');
-
-                thisImg = $(this).find('img');
-                thisText = $(this).find('.projtext');
-                iR = thisImg.data('r');
-                // square image
-                if (iR == 1.0) {
-                    thisImg
-                        .height(270)
-                        .width(270)
-                        .css('left', '0px')
-                        .css('top', '0px');
-                    thisText
-                        .css('top', '275px')
-                        .css('left', '0px');
-                } else if (iR < 1.0) {
-                    // portrait image
-
-                    width = iR * 270;
-                    imgleft = (270 - width) / 2;
-                    thisImg
-                        .height(270)
-                        .width('auto')
-                        .css('left', imgleft + 'px')
-                        .css('top', '0px');
-                    thisText
-                        .css('top', '275px')
-                        .css('left', imgleft + 'px');
-                } else {
-                    // landscape image
-
-                    height = 270 / iR;
-                    imgtop = (270 - height) / 2;
-                    thisImg
-                        .height('auto')
-                        .width(270)
-                        .css('left', '0px')
-                        .css('top', imgtop + 'px');
-                    thisText
-                        .css('top', height + imgtop + 5 + 'px');
-                }
-
-                /* Add Hover to Desktop images in Project Grid*/
-                $(this).hover(
-                    function() {
-                        $(this).find(".projtext").fadeIn(100);
-                    },
-                    function() {
-                        $(this).find(".projtext").fadeOut(100);
-                    }
-                );
-            }
-        });
-    }
-    /* End Resize Site */
-
-    /* Resize Image */
-    function imgResize(el, cw, ch, prop, woff, hoff, loff, toff) {
-        // element, container width, height, css prop (margin/top), width offset, height offset, left offset, top offset
-        var iR, sf, fit;
-        var cR, ih, iw, imt, iml;
-
-        iR = parseFloat(el.data("r"));
-        cR = (cw - woff) / (ch - hoff);
-        sf = el.data("f");
-
-        if (sf == 200) {
-            sf = 1;
-            fit = false;
-        } else {
-            sf = parseFloat(sf / 100);
-            fit = true;
-        }
-
-        //element ratio
-        if (!iR) {
-            iR = el.width() / el.height();
-        }
-        //scale factor
-        if (!sf) {
-            sf = 1;
-        }
-
-        // fit inside container
-        if (fit) {
-            //cR = (cw - woff) / (ch - hoff);
-            if (cR > iR) {
-                ih = (ch - hoff) * sf;
-                iw = ih * iR;
-            } else {
-                iw = (cw - woff) * sf;
-                ih = iw / iR;
-            }
-            imt = (ch - hoff - ih) / 2;
-            iml = (cw - woff - iw) / 2;
-        }
-        else {
-            // fill container
-            //cr = (cw / ch);
-            if (ir < 1) {
-                //image is portrait
-                iw = cw;
-                ih = iw / iR;
-                if (ih < ch) {
-                    ih = ch;
-                    iw = ih * ir;
-                    iml = (cw - iw) / 2 - loff;
-                    imt = (ch - ih) / 2 - toff;
-                } else {
-                    imt = (ch - ih) / 2 - toff;
-                    iml = (cw - iw) / 2 - loff;
-                }
-            } else {
-                // image is landscape
-                ih = ch;
-                iw = ih * ir;
-
-                if (iw < cw) {
-                    iw = cw;
-                    ih = iw / ir;
-                }
-
-                iml = (cw - iw) / 2 - loff;
-                imt = (ch - ih) / 2 - toff;
-            }
-        }
-        // If image is to be full screen
-        if (el.hasClass('full')) {
-            if (cR > iR) {
-                // landscape. set width equal to container.  centre image vertically
-                iw = cw;
-                ih = iw / iR;
-                iml = 0;
-                imt = - ((ih - ch) / 2);
-            } else {
-                // portrait. set height equal to container. centre image horizontally
-                ih = ch;
-                iw = ih * iR;
-                iml = -((iw - cw) / 2);
-                imt = 0;
-            }
-        }
-
-        if (prop == "margin") {
-            el.width(iw).height(ih).css({
-                marginTop: imt + "px",
-                marginLeft: iml + "px"
-            });
-        } else if (prop == "position") {
-            el.width(iw).height(ih).css({
-                top: imt + "px",
-                left: iml + "px"
-            });
-        } else if (prop == "array") {
-            var imgDim = new Array(4);
-            imgDim[0] = iw;
-            imgDim[1] = ih;
-            imgDim[2] = iml;
-            imgDim[3] = imt;
-            return imgDim;
-        }
-    }
-    /* End Resize Image */
-
-    /* Start: adjustFooterHeight */
-    function adjustFooterHeight() {
-        var ch = $(window).height() - headerheight - footerheight;
-        var fh = $('.footer__container').height();
-        var bfh = $('.below-footer__container')[0].scrollHeight;
-        if (bfh < 33) bfh = 0;
-
-        if(bfh > (ch - 150)) {
-            bfh = ch - 150;
-            $(".below-footer__description").height(bfh).css('overflow-y', 'scroll');
-            $(".below-footer__container").css('overflow-y', 'scroll');
-        }
-
-        $(".footer__container")
-            .stop()
-            .animate({
-                height: bfh + footerheight
-            }, {
-                duration: 200,
-                easing: 'jswing'
-            });
-        $(".below-footer__container").stop().animate({
-            marginTop: -(bfh)
-        }, {
-            duration: 200,
-            easing: 'jswing'
-        });
-        $(".below-footer__container").height(bfh);
-
-    }
-    /* End: adjustFooterHeight */
 
 })(jQuery);

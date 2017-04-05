@@ -53,7 +53,12 @@ global $template;
       </a>
 
       <div class="menu-icon">
-        <a class="header__icon" id="header__icon-open" href="<?php echo esc_url(home_url('/?swl=1')); ?>">
+        <?php if (basename($template) == 'single-project.php') : ?>
+          <a class="header__icon" id="header__icon-open" href="<?php echo esc_url(home_url('/projects')); ?>">
+        <?php else : ?>
+          <a class="header__icon" id="header__icon-open" href="<?php echo esc_url(home_url('/?swl=1')); ?>">
+        <?php endif; ?>
+
           <img src="<?php echo get_template_directory_uri(); ?>/images/menu-icon.gif" alt="menu" />
         </a>
       </div>
@@ -73,35 +78,27 @@ global $template;
         } ?>"
       />
         <a href="<?php echo esc_url(home_url('/profile')); ?>">
-          <span class="information_menu_icon">
           <?php
           if ( basename($template) == 'practice-profile.php' || basename($template) == 'practice-jobs.php' || basename($template) == 'archive-people.php' || basename($template) == 'contact.php' ) {
-            ?>
-              <img src="<?php echo get_template_directory_uri(); ?>/images/information_active.png" width="75px" height="15px" />
-            <?php
+            ?> <span class="large-menu-icon information active"> </span> <?php
           } else {
-            ?>
-              <img src="<?php echo get_template_directory_uri(); ?>/images/information.png" width="75px" height="15px" />
-            <?php
+            ?> <span class="large-menu-icon information"> </span> <?php
           }
           ?>
-          </span>
         </a>
 
         <a href="<?php echo esc_url(home_url('/project')); ?>">
-          <span class="projects_menu_icon">
           <?php
           if ( basename($template) == 'archive-project.php' || basename($template) == 'single-project.php' ) {
             ?>
-              <img src="<?php echo get_template_directory_uri(); ?>/images/projects_active.png" width="75px" height="15px" />
+              <span class="large-menu-icon projects active"></span>
             <?php
           } else {
             ?>
-              <img src="<?php echo get_template_directory_uri(); ?>/images/projects.png" width="75px" height="15px" />
+              <span class="large-menu-icon projects"></span>
             <?php
           }
           ?>
-          </span>
         </a>
       </div>
 
@@ -116,67 +113,59 @@ global $template;
         <div class="large-menu-sub is-active">
 
           <a href="<?php echo esc_url(home_url('/profile')); ?>">
-            <span class="profile_menu_icon">
             <?php
             if ( basename($template) == 'practice-profile.php' ) {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/profile_active.png" width="75px" height="15px" />
+                <span class="large-menu-icon profile active"></span>
               <?php
             } else {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/profile.png" width="75px" height="15px" />
+                <span class="large-menu-icon profile"></span>
               <?php
             }
             ?>
-            </span>
           </a>
           <!-- // TODO: Change this to a page again? -->
           <a href="<?php echo esc_url(home_url('/people')); ?>">
-            <span class="team_menu_icon">
             <?php
             if ( basename($template) == 'archive-people.php' ) {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/team_active.png" width="75px" height="15px" />
+                <span class="large-menu-icon team active"></span>
               <?php
             } else {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/team.png" width="75px" height="15px" />
+                <span class="large-menu-icon team"></span>
               <?php
             }
             ?>
-            </span>
           </a>
 
           <a href="<?php echo esc_url(home_url('/jobs')); ?>">
-            <span class="jobs_menu_icon">
             <?php
             if ( basename($template) == 'practice-jobs.php' ) {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/jobs_active.png" width="120px" height="15px" />
+                <span class="large-menu-icon jobs active"></span>
               <?php
             } else {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/jobs.png" width="120px" height="15px" />
+                <span class="large-menu-icon jobs"></span>
               <?php
             }
             ?>
-            </span>
           </a>
 
           <a href="<?php echo esc_url(home_url('/contact')); ?>">
-            <span class="contact_menu_icon">
             <?php
             if ( basename($template) == 'contact.php' ) {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/contact_active.png" width="75px" height="15px" />
+                <span class="large-menu-icon contact active"></span>
               <?php
             } else {
               ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/images/contact.png" width="75px" height="15px" />
+                <span class="large-menu-icon contact"></span>
               <?php
             }
             ?>
-            </span>
           </a>
 
 

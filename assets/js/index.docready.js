@@ -362,13 +362,66 @@
         $('#proj_img img').removeClass('slide');
         $('.arrw').hide();
         $('body').addClass('mobile').removeClass('large');
-
         if ($('body').hasClass('post-type-archive-project')) {
           //$('.large-menu-filter').toggleClass('is-active');
-          $('.large-menu_mobile').toggleClass('is-active');
+          $('.large-menu-search').removeClass('is-active');
+          $('.large-menu_mobile').removeClass('is-active');
           //$('.large-menu-search').toggleClass('is-active');
+          $('.search').hide();
+          $('.search-icon').hide();
         }
+        $(".projthumb").off('hover');
 
+
+    }
+
+    /**************************************************************************/
+    /* setLargeFooter
+    /*
+    /* Adds the text to the footer on large screens
+    /**************************************************************************/
+    function setLargeFooter() {
+      var caption, description, imagedate;
+
+      caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
+      description = $('#proj_img .active img').first().nextAll('.description').first().html();
+      imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
+
+      $('.footer__caption').html(caption);
+      $('.footer__caption-date').html(imagedate);
+      $('.below-footer__description').html(description);
+    }
+
+    /**************************************************************************/
+    /* expandFooter
+    /*
+    /* When "read more" is clicked, expand the footer
+    /**************************************************************************/
+    function expandFooter() {
+      /* If the footer is already expanded then lower it */
+      if ($('.footer__container').hasClass('expanded')) {
+          $('.footer__container').stop().animate({
+              height: footerheight
+          }, {
+              duration: 20,
+              easing: 'jswing'
+          });
+          $('.below-footer__container').stop().animate({
+              marginTop: 0
+          }, {
+              duration: 20,
+              easing: 'jswing'
+          });
+          $('.footer__container').removeClass('expanded');
+          $('.footer__more').text(" / Read text");
+
+      } else {
+          adjustFooterHeight();
+          $('.footer__container').addClass('expanded');
+          $('.footer__more').text(" / Hide text");
+      }
+
+      //$('.below-footer__container').top
     }
 
 
@@ -382,49 +435,23 @@
 
         /* ------ On resizing, check the screen size again ------- */
         $(window).resize(function () {
+            setTimeout(function() { // try this... give it a short timeout to catch the maximise button
+              // Desktop Size Screens
+              if ($(window).width() > 769) {
+                  if ($('.mobile').length > 0) {
 
-            // Desktop Size Screens
-            if ($(window).width() > 769) {
-                if ($('.mobile').length > 0) {
-                    var caption, description, imagedate;
+                      setLargeWindowClasses();
+                      setLargeFooter();
 
-                    $('#proj_img').addClass('large').removeClass('mobile');
-                    $('#projthumb-wrap').addClass('large').removeClass('mobile');
-                    $('body').addClass('large').removeClass('mobile');
-                    $('#proj_img img').addClass('slide');
+                      $("#proj_img img").hide();
+                      $('#proj_img .active img').first().fadeIn(400);
+                  }
+              } else { // Mobile Screens
+                  setMobileClasses()
+              }
+              resizeSite();
+            }, 100);
 
-                    $('.search').show();
-                    $('.search-icon').show();
-                    $('.large-menu-search').addClass('is-active');
-
-                    $("#proj_img img").hide();
-                    $('#proj_img .active img').first().fadeIn(400);
-
-                    caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
-                    description = $('#proj_img .active img').first().nextAll('.description').first().html();
-                    imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
-
-                    $('.footer__caption').html(caption);
-                    $('.footer__caption-date').html(imagedate);
-                    $('.below-footer__description').html(description);
-
-                }
-            } else { // Mobile Screens
-                $('body').removeClass('large').addClass('mobile');
-                $('#proj_img').removeClass('large').addClass('mobile');
-                $('#projthumb-wrap').removeClass('large').addClass('mobile');
-                $('.large-menu-search').removeClass('is-active');
-
-                $('#proj_img img').removeClass('slide');
-
-                $('.arrw').hide();
-
-                $(".projthumb").off('hover');
-                $('.search').hide();
-                $('.search-icon').hide();
-
-            }
-            resizeSite();
         });
 
 
@@ -440,16 +467,8 @@
                 $('.sub_logo-large-image').toggleClass('is-hidden');
                 return false;
             } else if ($('body').hasClass('mobile')) {
-                //e.preventDefault();
-                //$('.header__icon').toggleClass('is-active');
-                //$('.large-menu').toggleClass('is-active');
-                //$('.large-menu-filter').toggleClass('is-active');
-                //$('.large-menu_mobile').toggleClass('is-active');
-                //$('.large-menu-search').toggleClass('is-active');
-            } /*else if ($('body').hasClass('post-type-archive-people')) {
-            // archive-project in mobile mode
 
-            } */
+            }
         });
 
         /* Search Input Box Slideout */
@@ -475,30 +494,7 @@
         /* ------ Button for Footer Expand ------- */
         $('.expand').click(function (e) {
             e.preventDefault();
-            /* If the footer is already expanded then lower it */
-            if ($('.footer__container').hasClass('expanded')) {
-                $('.footer__container').stop().animate({
-                    height: footerheight
-                }, {
-                    duration: 20,
-                    easing: 'jswing'
-                });
-                $('.below-footer__container').stop().animate({
-                    marginTop: 0
-                }, {
-                    duration: 20,
-                    easing: 'jswing'
-                });
-                $('.footer__container').removeClass('expanded');
-                $('.footer__more').text(" / Read text");
-
-            } else {
-                adjustFooterHeight();
-                $('.footer__container').addClass('expanded');
-                $('.footer__more').text(" / Hide text");
-            }
-
-            //$('.below-footer__container').top
+            expandFooter();
         });
 
         resizeSite();
@@ -507,21 +503,10 @@
         // Hide Images and Fade in the first one
         if (!$.browser.msie && $(window).width() > 769) {
             if ($("#proj_img").length > 0) {
-                var caption, description, imagedate;
-                //hide all images
+                //hide all images and show the first one
                 $("#proj_img img").hide();
-                //$('#proj_img .active img').first().load(function() {
-                //$(this).fadeIn(400);
                 $('#proj_img .active img').first().fadeIn(400);
-                caption = $('#proj_img .active img').first().nextAll('.caption').first().html();
-                description = $('#proj_img .active img').first().nextAll('.description').first().html();
-                imagedate = $('#proj_img .active img').first().nextAll('.date').first().html();
-
-                $('.footer__caption').html(caption);
-                $('.footer__caption-date').html(imagedate);
-                $('.below-footer__description').html(description);
-                //});
-
+                setLargeFooter();
             }
         }
 
@@ -545,9 +530,6 @@
             } else if (thislink.hasClass("right")) {
                 dir = "r";
             }
-
-            //resizeSite();
-
 
             thisSlideShow = $("#proj_img");
             thisProject = $(".proj.active");
@@ -667,7 +649,6 @@
         }); // close >> #proj_img.proj .arrw click
 
         // Use Keyboard instead of Mouse
-        // TODO: This should do different on small screens?
         // For Index and Archive-Project it's ok
         $(document).keydown(function (e) {
             if (e.which === 37 && !e.metaKey) {
@@ -680,6 +661,7 @@
         });
 
         // NOTE: jQuery.touchSwipe.min.js
+        // NOTE: this is just for touch screens that are large.. Not mobile pages
         $(".arrw").swipe({
             //Generic swipe handler for all directions
             swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
@@ -691,7 +673,8 @@
                 }
             }
         });
-
+        // NOTE: Change to this format?
+        // $('.arrw').swipe({swipeLeft: swipeProjectLeft, swipeRight: swipeProjectRight, allowPageScroll: "vertical"});
 
         /* NOTE: Start More button for cover images in mobile size */
         $('.more').click(function () {
